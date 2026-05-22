@@ -10,7 +10,7 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
   const { profile, logout } = useAuth();
 
   // Mock spending history for elder
-  const spendingHistory = [
+  const momSpending = [
     { id: 1, desc: 'Groceries - Jaya Grocer', amount: -85.50, date: 'Today', icon: '🛒' },
     { id: 2, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'May 1', icon: '💰' },
     { id: 3, desc: 'Clinic Visit - Dr. Tan', amount: -120, date: 'Apr 28', icon: '🏥' },
@@ -18,6 +18,17 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
     { id: 5, desc: 'Pharmacy - Watson', amount: -45.80, date: 'Apr 25', icon: '💊' },
     { id: 6, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'Apr 1', icon: '💰' },
   ];
+
+  const dadSpending = [
+    { id: 1, desc: 'Petrol - Petronas', amount: -80.00, date: 'Today', icon: '⛽' },
+    { id: 2, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'May 1', icon: '💰' },
+    { id: 3, desc: 'Coffee - Kopitiam', amount: -12.50, date: 'Apr 29', icon: '☕' },
+    { id: 4, desc: 'Hardware Store - Mr DIY', amount: -65.00, date: 'Apr 27', icon: '🔧' },
+    { id: 5, desc: 'Fishing Supplies', amount: -95.00, date: 'Apr 24', icon: '🎣' },
+    { id: 6, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'Apr 1', icon: '💰' },
+  ];
+
+  const spendingHistory = profile?.displayName === 'Dad' ? dadSpending : momSpending;
 
   if (activeTab === 'settings') {
     return (
@@ -81,7 +92,7 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
             <AvatarFallback>{profile?.displayName?.[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Assalamualaikum</span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Welcome Back!</span>
             <h3 className="font-extrabold text-slate-900 text-lg leading-tight">
               {profile?.displayName}
             </h3>
@@ -123,7 +134,7 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
               </div>
               <div>
                 <p className="text-[9px] text-slate-500 uppercase font-bold">Amount</p>
-                <p className="text-xs font-black text-emerald-400">RM 2,000</p>
+                <p className="text-xs font-black text-emerald-400">RM {profile?.displayName === 'Dad' ? '2,500' : '2,000'}</p>
               </div>
             </div>
           </div>
@@ -144,7 +155,7 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
             </div>
           </div>
           <p className="text-[9px] font-black uppercase tracking-wider text-slate-400">This Month Spent</p>
-          <p className="text-lg font-black text-slate-900 mt-0.5">RM 269.80</p>
+          <p className="text-lg font-black text-slate-900 mt-0.5">RM {profile?.displayName === 'Dad' ? '252.50' : '269.80'}</p>
         </Card>
         <Card className="border border-slate-100 bg-white rounded-3xl p-5 shadow-sm">
           <div className="flex items-center gap-2 mb-2">

@@ -142,7 +142,7 @@ function AppContent() {
         </div>
 
         {/* Navigation Bar inside the frame */}
-        <Navbar activeTab={activeTab} onTabChange={setActiveTab} visible={isNavbarVisible} />
+        <Navbar activeTab={activeTab} onTabChange={setActiveTab} visible={isNavbarVisible} role={profile?.role} />
         <Toaster position="top-center" />
       </div>
     </div>

@@ -7,16 +7,26 @@ interface NavbarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   visible?: boolean;
+  role?: 'parent' | 'kid' | 'elder';
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange, visible = true }) => {
-  const tabs = [
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange, visible = true, role = 'parent' }) => {
+  const allTabs = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'wallet', icon: Wallet, label: 'Wallet' },
     { id: 'family', icon: Users, label: 'Family', hasDot: true },
     { id: 'analytics', icon: LayoutGrid, label: 'Insights' },
     { id: 'settings', icon: User, label: 'Profile' },
   ];
+
+  // Filter tabs based on role
+  const hiddenTabs: Record<string, string[]> = {
+    elder: ['analytics', 'family'],
+    kid: ['analytics'],
+    parent: [],
+  };
+
+  const tabs = allTabs.filter(tab => !hiddenTabs[role]?.includes(tab.id));
 
   return (
     <motion.div
@@ -89,4 +99,3 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange, visible 
     </motion.div>
   );
 };
-

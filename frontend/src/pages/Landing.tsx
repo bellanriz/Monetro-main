@@ -52,7 +52,7 @@ export const Landing: React.FC = () => {
     {
       id: 'mama',
       role: 'parent',
-      name: 'Mama',
+      name: 'Mom',
       title: 'Elder (Retired)',
       desc: 'Receives monthly allowance, views spending & savings balance',
       badge: 'Elder',
@@ -63,7 +63,7 @@ export const Landing: React.FC = () => {
     {
       id: 'ayah',
       role: 'parent',
-      name: 'Ayah',
+      name: 'Dad',
       title: 'Elder (Retired)',
       desc: 'Receives monthly allowance, views spending & savings balance',
       badge: 'Elder',
@@ -117,8 +117,10 @@ export const Landing: React.FC = () => {
         setIsSuccess(true);
         setTimeout(() => {
           const selectedProfile = profiles.find(p => p.id === selectedProfileId);
-          if (selectedProfile?.id === 'mama' || selectedProfile?.id === 'ayah') {
+          if (selectedProfile?.id === 'mama') {
             login('elder');
+          } else if (selectedProfile?.id === 'ayah') {
+            login('elder_dad');
           } else if (selectedType) {
             login(selectedType);
           }
@@ -419,8 +421,10 @@ export const Landing: React.FC = () => {
                     setIsSuccess(true);
                     setTimeout(() => {
                       const selectedProfile = profiles.find(p => p.id === selectedProfileId);
-                      if (selectedProfile?.id === 'mama' || selectedProfile?.id === 'ayah') {
+                      if (selectedProfile?.id === 'mama') {
                         login('elder');
+                      } else if (selectedProfile?.id === 'ayah') {
+                        login('elder_dad');
                       } else if (selectedType) {
                         login(selectedType);
                       }

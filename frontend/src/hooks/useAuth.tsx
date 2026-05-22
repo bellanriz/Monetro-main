@@ -15,7 +15,7 @@ interface AuthContextType {
   user: any | null;
   profile: UserProfile | null;
   loading: boolean;
-  login: (role?: 'parent' | 'kid' | 'elder') => Promise<void>;
+  login: (role?: 'parent' | 'kid' | 'elder' | 'elder_dad') => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -45,13 +45,24 @@ const MOCK_KID: UserProfile = {
 
 const MOCK_ELDER: UserProfile = {
   uid: 'elder-789',
-  email: 'mama@example.com',
-  displayName: 'Mama',
+  email: 'mom@example.com',
+  displayName: 'Mom',
   role: 'elder',
   balance: 2800,
   savingsBalance: 5000,
   parentId: 'parent-123',
   photoURL: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=120&h=120&fit=crop',
+};
+
+const MOCK_ELDER_DAD: UserProfile = {
+  uid: 'elder-790',
+  email: 'dad@example.com',
+  displayName: 'Dad',
+  role: 'elder',
+  balance: 3200,
+  savingsBalance: 8500,
+  parentId: 'parent-123',
+  photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -65,7 +76,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const p = JSON.parse(savedProfile);
       // Always use fresh mock data to pick up any code changes
       let freshProfile: UserProfile;
-      if (p.role === 'elder') {
+      if (p.role === 'elder' && p.displayName === 'Dad') {
+        freshProfile = MOCK_ELDER_DAD;
+      } else if (p.role === 'elder') {
         freshProfile = MOCK_ELDER;
       } else if (p.role === 'kid') {
         freshProfile = MOCK_KID;
@@ -79,9 +92,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   }, []);
 
-  const login = async (role: 'parent' | 'kid' | 'elder' = 'parent') => {
+  const login = async (role: 'parent' | 'kid' | 'elder' | 'elder_dad' = 'parent') => {
     let p: UserProfile;
-    if (role === 'elder') {
+    if (role === 'elder_dad') {
+      p = MOCK_ELDER_DAD;
+    } else if (role === 'elder') {
       p = MOCK_ELDER;
     } else if (role === 'kid') {
       p = MOCK_KID;
