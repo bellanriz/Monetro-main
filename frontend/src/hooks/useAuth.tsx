@@ -29,7 +29,7 @@ const MOCK_PARENT: UserProfile = {
   role: 'parent',
   balance: 5420,
   savingsBalance: 12000,
-  photoURL: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+  photoURL: '/images/Adam.png'
 };
 
 const MOCK_KID: UserProfile = {
@@ -52,8 +52,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedProfile = localStorage.getItem('famwallet_profile');
     if (savedProfile) {
       const p = JSON.parse(savedProfile);
-      setProfile(p);
-      setUser({ uid: p.uid });
+      // Always use fresh mock data to pick up any code changes
+      const freshProfile = p.role === 'parent' ? MOCK_PARENT : MOCK_KID;
+      setProfile(freshProfile);
+      setUser({ uid: freshProfile.uid });
+      localStorage.setItem('famwallet_profile', JSON.stringify(freshProfile));
     }
     setLoading(false);
   }, []);

@@ -140,16 +140,32 @@ export const Landing: React.FC = () => {
           >
             {/* Header Content */}
             <div className="text-center pt-4 space-y-4">
-              <div className="w-16 h-16 bg-slate-900 rounded-[2rem] mx-auto flex items-center justify-center shadow-xl shadow-slate-900/10 rotate-6 hover:rotate-0 transition-transform duration-300">
-                <GraduationCap className="text-[#CCFF00] w-9 h-9" />
-              </div>
+              <motion.div 
+                initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.1 }}
+                className="w-24 h-24 rounded-[2.5rem] mx-auto flex items-center justify-center shadow-2xl shadow-slate-900/20 overflow-hidden ring-4 ring-slate-100"
+              >
+                <motion.img 
+                  src="/images/monetro-logo.png" 
+                  alt="Monetro" 
+                  className="w-full h-full object-cover"
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              </motion.div>
               
-              <div className="space-y-1">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="space-y-1"
+              >
                 <h1 className="text-4xl font-extrabold tracking-tighter text-slate-950">
-                  Fam<span className="text-slate-950 italic underline decoration-[#CCFF00] decoration-4">Wallet</span>
+                  Mon<span className="text-slate-950 italic underline decoration-[#CCFF00] decoration-4">etro</span>
                 </h1>
                 <p className="text-slate-400 font-extrabold uppercase tracking-[0.25em] text-[9px]">Smart Family FinTech</p>
-              </div>
+              </motion.div>
 
               <p className="text-slate-500 text-sm font-medium leading-relaxed px-4 max-w-xs mx-auto">
                 Teach children smart savings, AI-guided spends, and reach family goals together.

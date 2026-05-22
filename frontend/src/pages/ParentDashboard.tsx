@@ -1131,13 +1131,13 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       {/* 1. Profile and Menu Header */}
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Avatar className="h-11 w-11 border border-slate-100 shadow-sm">
+          <Avatar className="h-14 w-14 border-2 border-slate-200 shadow-md">
             <AvatarImage src={profile?.photoURL || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop'} />
             <AvatarFallback>{profile?.displayName?.[0] || 'A'}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Good Morning</span>
-            <h3 className="font-extrabold text-slate-900 text-[15px] leading-tight">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Welcome Back!</span>
+            <h3 className="font-extrabold text-slate-900 text-lg leading-tight">
               {profile?.displayName || 'Adam'}
             </h3>
           </div>
@@ -2008,7 +2008,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
                   <div className="bg-slate-50 rounded-2xl p-4 text-left space-y-1 text-xs">
                     <p className="text-slate-400 font-bold">Secure Request Link:</p>
                     <p className="text-slate-950 font-mono font-medium truncate bg-white p-2.5 rounded-lg border border-slate-100 selection:bg-slate-205">
-                      https://famwallet.biz/req/74b92-j{receiveAmountText}
+                      https://monetro.app/req/74b92-j{receiveAmountText}
                     </p>
                   </div>
 
