@@ -1,87 +1,71 @@
 import { Router, Response } from "express";
 import { adminDb } from "../config/firebase-admin";
 import { AuthenticatedRequest, verifyToken } from "../middleware/auth";
+import admin from "firebase-admin";
 
 const router = Router();
 
-router.use(verifyToken);
-
-/**
- * GET /api/savings
- * Fetch savings goals for the authenticated user (or their kid).
- */
-router.get("/", async (req: AuthenticatedRequest, res: Response) => {
+// GET /api/savings - Get savings goals for the authenticated user (or their kid)
+router.get("/", verifyToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
+    const uid = req.user!.uid;
     const { kidId } = req.query;
-    const userId = req.user!.uid;
 
-    let targetUserId = userId;
+    let query: admin.firestore.Query = adminDb.collection("savingsGoals");
 
     if (kidId) {
       // Parent viewing kid's goals
       const kidDoc = await adminDb.collection("users").doc(kidId as string).get();
-      if (!kidDoc.exists || kidDoc.data()?.parentId !== userId) {
-        return res.status(403).json({ error: "Not authorized to view this user's goals" });
+      if (!kidDoc.exists || kidDoc.data()?.parentId !== uid) {
+        return res.status(403).json({ error: "Not authorized to view this kid's savings" });
       }
-      targetUserId = kidId as string;
+      query = query.where("userId", "==", kidId);
+    } else {
+      query = query.where("userId", "==", uid);
     }
 
-    const snapshot = await adminDb
-      .collection("savingsGoals")
-      .where("userId", "==", targetUserId)
-      .get();
-
-    const goals = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const snapshot = await query.get();
+    const goals = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     res.json({ goals });
   } catch (error: any) {
-    console.error("Get savings goals error:", error);
+    console.error("Get savings error:", error);
     res.status(500).json({ error: "Failed to fetch savings goals" });
   }
 });
 
-/**
- * POST /api/savings
- * Create a new savings goal.
- */
-router.post("/", async (req: AuthenticatedRequest, res: Response) => {
+// POST /api/savings - Create a new savings goal
+router.post("/", verifyToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user!.uid;
+    const uid = req.user!.uid;
     const { title, targetAmount, category, deadline } = req.body;
 
     if (!title || !targetAmount) {
-      return res.status(400).json({ error: "title and targetAmount are required" });
+      return res.status(400).json({ error: "Title and target amount are required" });
     }
 
     const goalData = {
-      userId,
+      userId: uid,
       title,
-      targetAmount: Number(targetAmount),
+      targetAmount,
       currentAmount: 0,
-      category: category || "general",
+      category: category || "General",
       deadline: deadline || null,
-      createdAt: new Date().toISOString(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
     const docRef = await adminDb.collection("savingsGoals").add(goalData);
-
-    res.status(201).json({ id: docRef.id, ...goalData });
+    res.status(201).json({ goal: { id: docRef.id, ...goalData } });
   } catch (error: any) {
     console.error("Create savings goal error:", error);
     res.status(500).json({ error: "Failed to create savings goal" });
   }
 });
 
-/**
- * PATCH /api/savings/:id/deposit
- * Add money to a savings goal.
- */
-router.patch("/:id/deposit", async (req: AuthenticatedRequest, res: Response) => {
+// PATCH /api/savings/:id/deposit - Add money to a savings goal
+router.patch("/:id/deposit", verifyToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user!.uid;
+    const uid = req.user!.uid;
     const { id } = req.params;
     const { amount } = req.body;
 
@@ -95,34 +79,44 @@ router.patch("/:id/deposit", async (req: AuthenticatedRequest, res: Response) =>
     }
 
     const goalData = goalDoc.data()!;
-
-    // Allow owner or parent to deposit
-    if (goalData.userId !== userId) {
-      const kidDoc = await adminDb.collection("users").doc(goalData.userId).get();
-      if (!kidDoc.exists || kidDoc.data()?.parentId !== userId) {
-        return res.status(403).json({ error: "Not authorized to update this goal" });
-      }
+    if (goalData.userId !== uid) {
+      return res.status(403).json({ error: "Not authorized to modify this goal" });
     }
 
-    const newAmount = goalData.currentAmount + Number(amount);
+    // Update goal progress
     await adminDb.collection("savingsGoals").doc(id).update({
-      currentAmount: newAmount,
+      currentAmount: admin.firestore.FieldValue.increment(amount),
     });
 
-    res.json({ message: "Deposit successful", currentAmount: newAmount });
+    // Deduct from user's main balance, add to savings balance
+    await adminDb.collection("users").doc(uid).update({
+      balance: admin.firestore.FieldValue.increment(-amount),
+      savingsBalance: admin.firestore.FieldValue.increment(amount),
+    });
+
+    // Record as a savings transaction
+    await adminDb.collection("transactions").add({
+      userId: uid,
+      amount,
+      type: "savings",
+      category: goalData.title,
+      description: `Deposit to "${goalData.title}"`,
+      status: "completed",
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      isSuspicious: false,
+    });
+
+    res.json({ message: "Deposit successful", newAmount: goalData.currentAmount + amount });
   } catch (error: any) {
-    console.error("Deposit to savings error:", error);
-    res.status(500).json({ error: "Failed to deposit" });
+    console.error("Deposit error:", error);
+    res.status(500).json({ error: "Failed to deposit to savings goal" });
   }
 });
 
-/**
- * DELETE /api/savings/:id
- * Delete a savings goal (owner only).
- */
-router.delete("/:id", async (req: AuthenticatedRequest, res: Response) => {
+// DELETE /api/savings/:id - Delete a savings goal
+router.delete("/:id", verifyToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user!.uid;
+    const uid = req.user!.uid;
     const { id } = req.params;
 
     const goalDoc = await adminDb.collection("savingsGoals").doc(id).get();
@@ -130,15 +124,15 @@ router.delete("/:id", async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json({ error: "Savings goal not found" });
     }
 
-    if (goalDoc.data()?.userId !== userId) {
-      return res.status(403).json({ error: "Only the goal owner can delete it" });
+    if (goalDoc.data()?.userId !== uid) {
+      return res.status(403).json({ error: "Not authorized to delete this goal" });
     }
 
     await adminDb.collection("savingsGoals").doc(id).delete();
-    res.json({ message: "Goal deleted", id });
+    res.json({ message: "Savings goal deleted" });
   } catch (error: any) {
     console.error("Delete savings goal error:", error);
-    res.status(500).json({ error: "Failed to delete goal" });
+    res.status(500).json({ error: "Failed to delete savings goal" });
   }
 });
 
