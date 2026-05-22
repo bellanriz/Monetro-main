@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a parent or child user in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["parent", "kid"] },
+        "parentId": { "type": "string", "description": "The UID of the parent if this user is a kid." },
+        "balance": { "type": "number" },
+        "savingsBalance": { "type": "number" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "balance"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A financial transaction (spending, allowance, or savings).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["spending", "allowance", "savings"] },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "completed"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "isSuspicious": { "type": "boolean" },
+        "scamReport": { "type": "string" }
+      },
+      "required": ["userId", "amount", "type", "status", "timestamp"]
+    },
+    "SavingsGoal": {
+      "title": "Savings Goal",
+      "description": "A target for a kid to save up for something.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "targetAmount": { "type": "number" },
+        "currentAmount": { "type": "number" },
+        "category": { "type": "string" },
+        "deadline": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "targetAmount", "currentAmount"]
+    },
+    "FamilyInvite": {
+      "title": "Family Invite",
+      "description": "An invitation for a kid to join a parent's account.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "parentEmail": { "type": "string" },
+        "kidEmail": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "declined"] }
+      },
+      "required": ["parentEmail", "kidEmail", "status"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Storage for user profiles."
+    },
+    "transactions": {
+      "schema": "Transaction",
+      "description": "Financial records."
+    },
+    "savingsGoals": {
+      "schema": "SavingsGoal",
+      "description": "Kid's savings targets."
+    },
+    "invites": {
+      "schema": "FamilyInvite",
+      "description": "Connecting parents and kids."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "FamWallet",
+  "description": "A smart family fintech platform for parents to teach financial literacy and track education savings.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
