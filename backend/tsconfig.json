@@ -9,6 +9,7 @@
     "moduleDetection": "force",
     "allowJs": true,
     "resolveJsonModule": true,
+    "resolveJsonModule": true,
     "outDir": "./dist",
     "noEmit": true,
     "strict": true,

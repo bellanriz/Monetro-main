@@ -14,9 +14,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "*.json"],
   "exclude": ["node_modules", "dist"]
 }

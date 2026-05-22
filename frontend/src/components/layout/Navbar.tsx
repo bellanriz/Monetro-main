@@ -27,7 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange, visible 
         x: '-50%'
       }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="absolute bottom-8 left-1/2 w-[90%] max-w-sm z-50 px-2"
+      className="absolute bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 w-[90%] max-w-sm z-50 px-2"
       style={{ pointerEvents: visible ? 'auto' : 'none' }}
     >
       <nav className="bg-[#121214]/95 backdrop-blur-3xl rounded-[2rem] p-2 flex items-center justify-between shadow-[0_24px_50px_rgba(0,0,0,0.91)] border border-white/5">
