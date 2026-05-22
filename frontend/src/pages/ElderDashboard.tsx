@@ -11,21 +11,21 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
 
   // Mock spending history for elder
   const momSpending = [
-    { id: 1, desc: 'Groceries - Jaya Grocer', amount: -85.50, date: 'Today', icon: '🛒' },
-    { id: 2, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'May 1', icon: '💰' },
-    { id: 3, desc: 'Clinic Visit - Dr. Tan', amount: -120, date: 'Apr 28', icon: '🏥' },
-    { id: 4, desc: 'Grab Ride - KLCC', amount: -18.50, date: 'Apr 26', icon: '🚗' },
-    { id: 5, desc: 'Pharmacy - Watson', amount: -45.80, date: 'Apr 25', icon: '💊' },
-    { id: 6, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'Apr 1', icon: '💰' },
+    { id: 1, desc: 'Groceries - Jaya Grocer', amount: -85.50, date: 'Today', category: 'Groceries' },
+    { id: 2, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'May 1', category: 'Allowance' },
+    { id: 3, desc: 'Clinic Visit - Dr. Tan', amount: -120, date: 'Apr 28', category: 'Health' },
+    { id: 4, desc: 'Grab Ride - KLCC', amount: -18.50, date: 'Apr 26', category: 'Transport' },
+    { id: 5, desc: 'Pharmacy - Watson', amount: -45.80, date: 'Apr 25', category: 'Health' },
+    { id: 6, desc: 'Monthly Allowance from Adam', amount: 2000, date: 'Apr 1', category: 'Allowance' },
   ];
 
   const dadSpending = [
-    { id: 1, desc: 'Petrol - Petronas', amount: -80.00, date: 'Today', icon: '⛽' },
-    { id: 2, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'May 1', icon: '💰' },
-    { id: 3, desc: 'Coffee - Kopitiam', amount: -12.50, date: 'Apr 29', icon: '☕' },
-    { id: 4, desc: 'Hardware Store - Mr DIY', amount: -65.00, date: 'Apr 27', icon: '🔧' },
-    { id: 5, desc: 'Fishing Supplies', amount: -95.00, date: 'Apr 24', icon: '🎣' },
-    { id: 6, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'Apr 1', icon: '💰' },
+    { id: 1, desc: 'Petrol - Petronas', amount: -80.00, date: 'Today', category: 'Transport' },
+    { id: 2, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'May 1', category: 'Allowance' },
+    { id: 3, desc: 'Coffee - Kopitiam', amount: -12.50, date: 'Apr 29', category: 'Food' },
+    { id: 4, desc: 'Hardware Store - Mr DIY', amount: -65.00, date: 'Apr 27', category: 'Shopping' },
+    { id: 5, desc: 'Fishing Supplies', amount: -95.00, date: 'Apr 24', category: 'Leisure' },
+    { id: 6, desc: 'Monthly Allowance from Adam', amount: 2500, date: 'Apr 1', category: 'Allowance' },
   ];
 
   const spendingHistory = profile?.displayName === 'Dad' ? dadSpending : momSpending;
@@ -185,8 +185,8 @@ export const ElderDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) =
             <Card key={item.id} className="border border-slate-100 bg-white rounded-2xl p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-lg">
-                    {item.icon}
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                    <span className="text-xs font-black text-slate-600 uppercase">{item.category.slice(0, 2)}</span>
                   </div>
                   <div>
                     <h4 className="font-extrabold text-slate-900 text-sm">{item.desc}</h4>

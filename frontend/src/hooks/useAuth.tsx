@@ -15,7 +15,7 @@ interface AuthContextType {
   user: any | null;
   profile: UserProfile | null;
   loading: boolean;
-  login: (role?: 'parent' | 'kid' | 'elder' | 'elder_dad') => Promise<void>;
+  login: (role?: 'parent' | 'kid' | 'kid_alisya' | 'elder' | 'elder_dad') => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -33,7 +33,7 @@ const MOCK_PARENT: UserProfile = {
 };
 
 const MOCK_KID: UserProfile = {
-  uid: 'kid-456',
+  uid: 'kid-455',
   email: 'kid@example.com',
   displayName: 'Isac',
   role: 'kid',
@@ -41,6 +41,17 @@ const MOCK_KID: UserProfile = {
   savingsBalance: 450,
   parentId: 'parent-123',
   photoURL: '/images/isac.png',
+};
+
+const MOCK_KID_ALISYA: UserProfile = {
+  uid: 'kid-456',
+  email: 'alisya@example.com',
+  displayName: 'Alisya',
+  role: 'kid',
+  balance: 65,
+  savingsBalance: 350,
+  parentId: 'parent-123',
+  photoURL: '/images/alisya.png',
 };
 
 const MOCK_ELDER: UserProfile = {
@@ -74,12 +85,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedProfile = localStorage.getItem('famwallet_profile');
     if (savedProfile) {
       const p = JSON.parse(savedProfile);
-      // Always use fresh mock data to pick up any code changes
       let freshProfile: UserProfile;
       if (p.role === 'elder' && p.displayName === 'Dad') {
         freshProfile = MOCK_ELDER_DAD;
       } else if (p.role === 'elder') {
         freshProfile = MOCK_ELDER;
+      } else if (p.role === 'kid' && p.displayName === 'Alisya') {
+        freshProfile = MOCK_KID_ALISYA;
       } else if (p.role === 'kid') {
         freshProfile = MOCK_KID;
       } else {
@@ -92,12 +104,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   }, []);
 
-  const login = async (role: 'parent' | 'kid' | 'elder' | 'elder_dad' = 'parent') => {
+  const login = async (role: 'parent' | 'kid' | 'kid_alisya' | 'elder' | 'elder_dad' = 'parent') => {
     let p: UserProfile;
     if (role === 'elder_dad') {
       p = MOCK_ELDER_DAD;
     } else if (role === 'elder') {
       p = MOCK_ELDER;
+    } else if (role === 'kid_alisya') {
+      p = MOCK_KID_ALISYA;
     } else if (role === 'kid') {
       p = MOCK_KID;
     } else {

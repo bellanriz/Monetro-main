@@ -121,6 +121,8 @@ export const Landing: React.FC = () => {
             login('elder');
           } else if (selectedProfile?.id === 'ayah') {
             login('elder_dad');
+          } else if (selectedProfile?.id === 'Alisya') {
+            login('kid_alisya');
           } else if (selectedType) {
             login(selectedType);
           }
@@ -425,6 +427,8 @@ export const Landing: React.FC = () => {
                         login('elder');
                       } else if (selectedProfile?.id === 'ayah') {
                         login('elder_dad');
+                      } else if (selectedProfile?.id === 'Alisya') {
+                        login('kid_alisya');
                       } else if (selectedType) {
                         login(selectedType);
                       }

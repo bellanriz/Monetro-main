@@ -30,6 +30,7 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
   const [biometrics, setBiometrics] = useState(true);
   const [pushAlerts, setPushAlerts] = useState(true);
   const [switching, setSwitching] = useState(false);
+  const [showCardSettings, setShowCardSettings] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'analytics' && transactions.length > 0 && !insights) {
@@ -55,11 +56,11 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
   };
 
   const categories = [
-    { name: 'Food', icon: '🍔', color: 'bg-orange-100 text-orange-600' },
-    { name: 'Games', icon: '🎮', color: 'bg-purple-100 text-purple-600' },
-    { name: 'Shopping', icon: '🛍️', color: 'bg-blue-100 text-blue-600' },
-    { name: 'Transport', icon: '🚌', color: 'bg-emerald-100 text-emerald-600' },
-    { name: 'Education', icon: '📚', color: 'bg-indigo-100 text-indigo-600' },
+    { name: 'Food', color: 'bg-orange-100 text-orange-600' },
+    { name: 'Games', color: 'bg-purple-100 text-purple-600' },
+    { name: 'Shopping', color: 'bg-blue-100 text-blue-600' },
+    { name: 'Transport', color: 'bg-emerald-100 text-emerald-600' },
+    { name: 'Education', color: 'bg-indigo-100 text-indigo-600' },
   ];
 
   // SWITCHING FUNCTION
@@ -227,319 +228,169 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
   // WALLET TAB
   if (activeTab === 'wallet') {
     const currentCard = cards.find(c => c.id === selectedCardId) || cards[0];
-    const isVirtual = currentCard.type === 'virtual';
-
-    const TEST_SPENDS = [
-      { description: 'Chicken McNuggets', amount: 15, location: 'Kuala Lumpur, Malaysia (Domestic)', category: 'Food', isOverseas: false },
-      { description: 'Robux Coins Premium', amount: 45, location: 'Roblox Online US (Overseas)', category: 'Games', isOverseas: true },
-      { description: 'Nintendo Shop Akihabara', amount: 2450, location: 'Tokyo, Japan (Overseas shop)', category: 'Games', isOverseas: true },
-      { description: 'Harrods Gift Arcade', amount: 4200, location: 'London, United Kingdom (Overseas)', category: 'Shopping', isOverseas: true }
-    ];
-
-    const currentSpendPreset = TEST_SPENDS[simulateIndex];
-
-    const handleSimulateSwipe = async () => {
-      if (!currentCard) return;
-
-      if (currentCard.status === 'frozen') {
-        toast.error('🔒 Transaction Denied: Card is currently frozen!');
-        return;
-      }
-
-      if (currentSpendPreset.isOverseas && !currentCard.allowOverseas) {
-        toast.error('🌍 Transaction Denied: Overseas purchases are disabled on this card!');
-        return;
-      }
-
-      if (!currentSpendPreset.isOverseas && !currentCard.allowDomestic) {
-        toast.error('🏠 Transaction Denied: Domestic purchases are disabled on this card!');
-        return;
-      }
-
-      setIsSwiping(true);
-      
-      setTimeout(async () => {
-        setIsSwiping(false);
-        
-        const newTx = await addTransaction({
-          amount: currentSpendPreset.amount,
-          type: 'spending',
-          category: currentSpendPreset.category,
-          description: currentSpendPreset.description,
-          location: currentSpendPreset.location,
-          isOverseas: currentSpendPreset.isOverseas,
-          cardType: currentCard.type
-        });
-
-        if (currentSpendPreset.amount > 2000) {
-          toast.warning(`⚠️ Exceeded parent limit! RM ${currentSpendPreset.amount} at ${currentSpendPreset.location} pending parent approval.`);
-        } else {
-          toast.success(`💳 Simulated purchase successful! RM ${currentSpendPreset.amount} spent.`);
-        }
-      }, 1000);
-    };
 
     return (
-      <div className="max-w-md mx-auto p-6 space-y-8 pb-32 animate-in fade-in duration-500">
+      <div className="max-w-md mx-auto p-6 space-y-6 pb-32 animate-in fade-in duration-500">
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Kid Wallet</h2>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Configure Cards & Spends</p>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">My Wallet</h2>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Balance & Transactions</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-            <Coins size={18} />
-          </div>
+          <button
+            onClick={() => setShowCardSettings(!showCardSettings)}
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+              showCardSettings ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"
+            )}
+          >
+            <Key size={18} />
+          </button>
         </header>
 
-        {/* Card Type Selector */}
-        <div className="flex bg-slate-100 p-1.5 rounded-[2rem]">
-          <button 
-            onClick={() => { setSelectedCardId('c1'); setShowCardNumber(false); }}
-            className={cn(
-              "flex-1 py-3 text-xs font-black rounded-2xl transition-all flex items-center justify-center gap-1.5",
-              selectedCardId === 'c1' ? "bg-white text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
-            )}
-          >
-            <Smartphone size={14} /> Virtual Card
-          </button>
-          <button 
-            onClick={() => { setSelectedCardId('c2'); setShowCardNumber(false); }}
-            className={cn(
-              "flex-1 py-3 text-xs font-black rounded-2xl transition-all flex items-center justify-center gap-1.5",
-              selectedCardId === 'c2' ? "bg-white text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
-            )}
-          >
-            <CreditCard size={14} /> Physical Card
-          </button>
-        </div>
-
-        {/* Dynamic Fintech Card Component */}
-        <div className="relative">
-          <motion.div
-            key={selectedCardId}
-            initial={{ rotateY: 50, opacity: 0.8 }}
-            animate={{ rotateY: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className={cn(
-              "w-full text-white border-none shadow-2xl rounded-[2.5rem] relative overflow-hidden p-8 flex flex-col justify-between min-h-[210px] transform-gpu",
-              isVirtual 
-                ? "bg-gradient-to-tr from-[#1E3A8A] via-[#3B82F6] to-[#EC4899] text-white" 
-                : "bg-gradient-to-tr from-[#FF7E00] via-[#F43F5E] to-[#E11D48] text-white",
-              currentCard.status === 'frozen' && "grayscale contrast-75 brightness-75 duration-300"
-            )}
-          >
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-            <div className="absolute inset-0 bg-black/10 mix-blend-overlay pointer-events-none" />
-
-            {/* Frozen Watermark */}
-            {currentCard.status === 'frozen' && (
-              <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[1px] flex flex-col items-center justify-center gap-1 z-30">
-                <Lock className="text-white animate-bounce" size={32} />
-                <span className="text-xs font-black tracking-widest uppercase text-white bg-slate-900/80 px-3 py-1 rounded-full border border-white/15">Card Frozen</span>
-              </div>
-            )}
-
-            {/* Top row */}
-            <div className="flex items-center justify-between relative z-10">
-              <div className="space-y-0.5">
-                <p className="text-white/60 font-black uppercase tracking-[0.2em] text-[9px]">Card Balance</p>
-                <h3 className="text-4xl font-extrabold tracking-tight">
-                  RM {profile?.balance.toLocaleString()}
-                </h3>
-              </div>
-              <div className="bg-white/10 border border-white/20 p-2.5 rounded-2xl">
-                {isVirtual ? <Smartphone size={18} /> : <CreditCard size={18} />}
-              </div>
-            </div>
-
-            {/* Middle row: Card Number */}
-            <div className="pt-2 relative z-10 flex items-center gap-3">
-              <span className="font-mono text-lg font-bold tracking-widest leading-none">
-                {showCardNumber ? currentCard.cardNumber : `•••• •••• •••• ${currentCard.cardNumber.slice(-4)}`}
-              </span>
-              <button 
-                onClick={() => setShowCardNumber(!showCardNumber)}
-                className="p-1 bg-white/10 hover:bg-white/20 rounded-md transition-colors text-white/80"
-              >
-                {showCardNumber ? <EyeOff size={11} /> : <Eye size={11} />}
-              </button>
-            </div>
-
-            {/* Bottom Row */}
-            <div className="pt-4 flex justify-between items-end relative z-10">
-              <div className="space-y-0.5">
-                <p className="text-white/40 uppercase tracking-widest text-[8px] font-black">Cardholder</p>
-                <p className="text-xs font-black tracking-wider uppercase">{currentCard.cardHolder}</p>
-              </div>
-              <div className="flex gap-4 text-right">
-                <div>
-                  <p className="text-white/40 uppercase tracking-widest text-[8px] font-black">Expiry</p>
-                  <p className="text-xs font-mono font-black">{currentCard.expiry}</p>
-                </div>
-                <div>
-                  <p className="text-white/40 uppercase tracking-widest text-[8px] font-black">CVV</p>
-                  <p className="text-xs font-mono font-black">{showCardNumber ? currentCard.cvv : '•••'}</p>
-                </div>
-                <div className="font-sans font-black tracking-widest text-lg text-white/50 flex align-middle">
-                  VISA
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Card Customization & Settings Switches */}
-        <div className="space-y-3">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Card Controls</p>
-          <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden p-6 space-y-4">
-            
-            {/* Freeze Card Option */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "p-2.5 rounded-xl transition-colors",
-                  currentCard.status === 'frozen' ? "bg-rose-50 text-rose-500" : "bg-[#CCFF00]/10 text-slate-900"
-                )}>
-                  {currentCard.status === 'frozen' ? <Lock size={16} /> : <Unlock size={16} />}
-                </div>
-                <div>
-                  <h4 className="text-xs font-extrabold text-slate-900">Freeze Card Setting</h4>
-                  <p className="text-[10px] text-slate-400 font-medium">Instantly stop all new card spends</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => updateCardSetting(currentCard.id, 'status', currentCard.status === 'frozen' ? 'active' : 'frozen')}
-                className={cn(
-                  "w-11 h-6 rounded-full p-1 transition-colors duration-200 focus:outline-none",
-                  currentCard.status === 'frozen' ? 'bg-rose-500' : 'bg-[#CCFF00]'
-                )}
-              >
-                <div className={cn(
-                  "bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200",
-                  currentCard.status === 'frozen' ? 'translate-x-[20px]' : 'translate-x-0'
-                )} />
-              </button>
-            </div>
-
-            {/* Domestic In-Country purchases toggle */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-slate-50 text-slate-700 rounded-xl">
-                  <MapPin size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-extrabold text-slate-900">Domestic In-Country Spending</h4>
-                  <p className="text-[10px] text-slate-400 font-medium">Purchase at local stores inside Malaysia</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => updateCardSetting(currentCard.id, 'allowDomestic', !currentCard.allowDomestic)}
-                className={cn(
-                  "w-11 h-6 rounded-full p-1 transition-colors duration-200 focus:outline-none",
-                  currentCard.allowDomestic ? 'bg-emerald-500' : 'bg-slate-200'
-                )}
-              >
-                <div className={cn(
-                  "bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200",
-                  currentCard.allowDomestic ? 'translate-x-[20px]' : 'translate-x-0'
-                )} />
-              </button>
-            </div>
-
-            {/* Overseas Toggle Option */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-slate-50 text-slate-700 rounded-xl">
-                  <Globe size={16} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-extrabold text-slate-900">Overseas & Global Purchases</h4>
-                  <p className="text-[10px] text-slate-400 font-medium font-semibold">Enable foreign shops & platforms</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => updateCardSetting(currentCard.id, 'allowOverseas', !currentCard.allowOverseas)}
-                className={cn(
-                  "w-11 h-6 rounded-full p-1 transition-colors duration-200 focus:outline-none",
-                  currentCard.allowOverseas ? 'bg-emerald-500' : 'bg-slate-200'
-                )}
-              >
-                <div className={cn(
-                  "bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-200",
-                  currentCard.allowOverseas ? 'translate-x-[20px]' : 'translate-x-0'
-                )} />
-              </button>
-            </div>
-
-            {/* Predefined Limit Alert Monitor card indicator */}
-            <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs text-slate-400 bg-slate-50 rounded-2xl p-3">
-              <div className="flex items-center gap-1.5 font-bold">
-                <AlertCircle className="text-slate-500 stroke-[2.5]" size={14} />
-                <span>Limit Monitoring</span>
-              </div>
-              <span className="font-mono text-slate-900 font-black">Spends &gt; RM 2k request authorization</span>
-            </div>
-          </Card>
-        </div>
-
-        {/* INTERACTIVE SWIPE PLAYGROUND */}
-        <div className="space-y-4">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Fintech Spend Simulator</p>
-          
-          <Card className="border-2 border-slate-100 bg-gradient-to-b from-white to-slate-50/50 shadow-md rounded-[2rem] p-6 space-y-4">
-            <h4 className="font-extrabold text-slate-900 tracking-tight text-sm">Interactive Swipe Card Test</h4>
-            <p className="text-xs text-slate-400 font-medium leading-relaxed">
-              Test card regulations and overseas limits! Exceeding RM 2,000 threshold will request live parent authorization.
-            </p>
-
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              {TEST_SPENDS.map((s, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSimulateIndex(index)}
-                  className={cn(
-                    "p-3 rounded-2xl text-left border transition-all flex flex-col justify-between h-20 relative overflow-hidden",
-                    simulateIndex === index 
-                      ? "border-slate-900 bg-slate-900 text-white shadow-md shadow-slate-950/15" 
-                      : "border-slate-100 bg-white text-slate-800 hover:bg-slate-50"
-                  )}
-                >
-                  <span className="text-[10px] font-extrabold uppercase tracking-tight block">
-                    {s.isOverseas ? "🌍 Overseas" : "🏠 Domestic"}
-                  </span>
-                  <div>
-                    <p className="text-[11px] font-bold line-clamp-1 leading-tight">{s.description}</p>
-                    <p className="text-xs font-black mt-0.5 font-mono">RM {s.amount}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <Button
-              onClick={handleSimulateSwipe}
-              disabled={isSwiping}
-              className={cn(
-                "w-full rounded-[1.5rem] py-6 font-extrabold h-12 flex items-center justify-center gap-2",
-                currentCard.status === 'frozen' 
-                  ? "bg-slate-250 text-slate-400 cursor-not-allowed" 
-                  : "bg-slate-950 text-white hover:bg-slate-800 shadow-md shadow-slate-950/15 transition-all"
-              )}
+        {/* Card Settings (Parent Controlled) */}
+        <AnimatePresence>
+          {showCardSettings && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
             >
-              {isSwiping ? (
-                <>
-                  <RefreshCw className="animate-spin w-4 h-4 text-white" />
-                  Swiping Card...
-                </>
-              ) : (
-                <>
-                  <Compass className="w-4 h-4 text-[#CCFF00]" />
-                  Simulate Swipe Card (Swipe!)
-                </>
-              )}
-            </Button>
-          </Card>
+              <Card className="border border-slate-100 shadow-sm rounded-[2rem] bg-white p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Card Settings</p>
+                  <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 bg-amber-100 text-amber-700 rounded-md border border-amber-200">
+                    Parent Controlled
+                  </span>
+                </div>
+
+                {/* Freeze Status */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "p-2 rounded-xl",
+                      currentCard.status === 'frozen' ? "bg-rose-50 text-rose-500" : "bg-emerald-50 text-emerald-600"
+                    )}>
+                      {currentCard.status === 'frozen' ? <Lock size={14} /> : <Unlock size={14} />}
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-900">Freeze Card</h4>
+                      <p className="text-[9px] text-slate-400">Stop all new card spends</p>
+                    </div>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-black px-2.5 py-1 rounded-full",
+                    currentCard.status === 'frozen' ? "bg-rose-100 text-rose-600" : "bg-emerald-100 text-emerald-600"
+                  )}>
+                    {currentCard.status === 'frozen' ? 'Frozen' : 'Active'}
+                  </span>
+                </div>
+
+                {/* Domestic */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-slate-50 text-slate-600 rounded-xl">
+                      <MapPin size={14} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-900">Domestic Spending</h4>
+                      <p className="text-[9px] text-slate-400">Local stores in Malaysia</p>
+                    </div>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-black px-2.5 py-1 rounded-full",
+                    currentCard.allowDomestic ? "bg-emerald-100 text-emerald-600" : "bg-slate-100 text-slate-500"
+                  )}>
+                    {currentCard.allowDomestic ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+
+                {/* Overseas */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-slate-50 text-slate-600 rounded-xl">
+                      <Globe size={14} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-900">Overseas Purchases</h4>
+                      <p className="text-[9px] text-slate-400">Foreign shops & platforms</p>
+                    </div>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-black px-2.5 py-1 rounded-full",
+                    currentCard.allowOverseas ? "bg-emerald-100 text-emerald-600" : "bg-slate-100 text-slate-500"
+                  )}>
+                    {currentCard.allowOverseas ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+
+                {/* Request Change Button */}
+                <button
+                  onClick={() => toast.info('Request sent to parent for approval.')}
+                  className="w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black rounded-2xl text-xs uppercase tracking-wider transition-colors active:scale-95"
+                >
+                  Request Change from Parent
+                </button>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Balance Card */}
+        <Card className="bg-slate-900 text-white border-none shadow-2xl rounded-[2.5rem] relative overflow-hidden p-7">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full blur-2xl -mr-12 -mt-12 pointer-events-none" />
+          <div className="space-y-3 relative z-10">
+            <p className="text-slate-400 font-extrabold uppercase tracking-[0.2em] text-[10px]">Current Balance</p>
+            <h3 className="text-4xl font-black tracking-tighter">
+              RM {profile?.balance.toLocaleString()}
+            </h3>
+          </div>
+        </Card>
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => toast.info('Send money feature coming soon!')}
+            className="bg-white border border-slate-100 rounded-2xl p-4 flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95"
+          >
+            <ArrowUpRight size={18} className="text-slate-900" />
+            <span className="font-black text-sm text-slate-900">Send</span>
+          </button>
+          <button
+            onClick={() => toast.info('Scan & Pay feature coming soon!')}
+            className="bg-white border border-slate-100 rounded-2xl p-4 flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95"
+          >
+            <Smartphone size={18} className="text-slate-900" />
+            <span className="font-black text-sm text-slate-900">Scan & Pay</span>
+          </button>
         </div>
+
+        {/* Transaction History */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Transactions</h3>
+            <span className="text-[10px] uppercase font-bold text-slate-400">This month</span>
+          </div>
+
+          <div className="space-y-3">
+            {transactions.map((tx) => (
+              <Card key={tx.id} className="border border-slate-100 bg-white rounded-2xl p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="min-w-0">
+                    <h4 className="font-extrabold text-slate-900 text-sm truncate">{tx.description}</h4>
+                    <p className="text-[10px] text-slate-400 font-bold">{tx.category}</p>
+                  </div>
+                  <span className={cn(
+                    "font-black text-base shrink-0 ml-3 tabular-nums",
+                    tx.type === 'spending' ? "text-rose-500" : "text-emerald-500"
+                  )}>
+                    {tx.type === 'spending' ? '−' : '+'}RM{tx.amount.toLocaleString()}
+                  </span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
       </div>
     );
   }
@@ -646,15 +497,15 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
         </Card>
       </motion.div>
 
-      <section className="space-y-6">
+      <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Savings Goals</h3>
-          <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600">
-            <Plus size={20} />
+          <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Savings Goals</h3>
+          <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600">
+            <Plus size={16} />
           </Button>
         </div>
         
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           <AnimatePresence>
             {goals.map((goal) => (
               <motion.div
@@ -663,43 +514,55 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
               >
-                <Card className="border-none shadow-sm hover:shadow-xl transition-all p-8 rounded-[2.5rem] bg-white group border border-slate-50">
-                  <div className="space-y-6">
+                <Card className="border-none shadow-sm hover:shadow-md transition-all p-5 rounded-[2rem] bg-white border border-slate-50">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="p-4 bg-slate-50 rounded-[1.5rem] group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:rotate-6 text-slate-600">
-                          {goal.category === 'university' && <GraduationCap size={28} />}
-                          {goal.category === 'laptop' && <Laptop size={28} />}
-                          {goal.category === 'car' && <Car size={28} />}
-                          {!['university', 'laptop', 'car'].includes(goal.category) && <Sparkles size={28} />}
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-slate-100 rounded-xl text-slate-600">
+                          {goal.category === 'university' && <GraduationCap size={20} />}
+                          {goal.category === 'laptop' && <Laptop size={20} />}
+                          {goal.category === 'car' && <Car size={20} />}
+                          {!['university', 'laptop', 'car'].includes(goal.category) && <Sparkles size={20} />}
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-slate-900 text-xl tracking-tight">{goal.title}</h4>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{goal.category}</p>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-extrabold text-slate-900 text-sm tracking-tight">{goal.title}</h4>
+                            {goal.category === 'university' && (
+                              <span className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded-md border border-amber-200 flex items-center gap-0.5">
+                                <Lock size={8} /> SSPN Locked
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{goal.category}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-black text-slate-900 tracking-tighter">RM {goal.targetAmount - goal.currentAmount}</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Remaining</p>
+                        <p className="text-base font-black text-slate-900 tracking-tighter">RM {(goal.targetAmount - goal.currentAmount).toLocaleString()}</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase">remaining</p>
                       </div>
                     </div>
                     
-                    <div className="space-y-3 pt-2">
+                    <div className="space-y-2">
                        <div className="flex justify-between items-baseline">
-                         <span className="text-[11px] font-black text-blue-600 uppercase tracking-widest">
-                           {Math.round((goal.currentAmount / goal.targetAmount) * 100)}% Complete
+                         <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">
+                           {Math.round((goal.currentAmount / goal.targetAmount) * 100)}%
                          </span>
-                         <span className="text-[11px] font-bold text-slate-400 tabular-nums">
-                           RM {goal.currentAmount} / {goal.targetAmount}
+                         <span className="text-[10px] font-bold text-slate-400 tabular-nums">
+                           RM {goal.currentAmount.toLocaleString()} / {goal.targetAmount.toLocaleString()}
                          </span>
                        </div>
-                       <div className="h-4 w-full bg-slate-50 rounded-full overflow-hidden p-1">
+                       <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
                          <motion.div 
                            initial={{ width: 0 }}
                            animate={{ width: `${(goal.currentAmount / goal.targetAmount) * 100}%` }}
-                           className="h-full bg-blue-600 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.3)]" 
+                           className="h-full bg-blue-600 rounded-full" 
                          />
                        </div>
+                       {goal.category === 'university' && (
+                         <p className="text-[9px] text-amber-600 font-bold mt-1">
+                           This fund is linked to SSPN and cannot be withdrawn until maturity.
+                         </p>
+                       )}
                     </div>
                   </div>
                 </Card>
@@ -707,75 +570,20 @@ export const KidDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) => 
             ))}
           </AnimatePresence>
           {goals.length === 0 && (
-             <div className="text-center py-16 bg-white rounded-[2.5rem] border-2 border-dashed border-slate-100 space-y-6">
-                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto transform rotate-6 border border-slate-100">
-                    <Sparkles className="text-slate-300" size={32} />
+             <div className="text-center py-12 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 space-y-4">
+                <div className="w-14 h-14 bg-slate-50 rounded-full flex items-center justify-center mx-auto border border-slate-100">
+                    <Sparkles className="text-slate-300" size={24} />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-slate-900 font-extrabold text-lg">Goal-less?</p>
-                  <p className="text-slate-400 font-bold px-12 leading-relaxed">Saving for something big? Add your first goal to get started!</p>
+                  <p className="text-slate-900 font-extrabold text-sm">No goals yet</p>
+                  <p className="text-slate-400 font-bold text-xs px-8">Add your first savings goal to start tracking!</p>
                 </div>
              </div>
           )}
         </div>
       </section>
 
-      <section className="space-y-6 pb-4">
-        <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Recent Activity</h3>
-        <div className="space-y-3">
-          {transactions.map((tx) => (
-            <div key={tx.id} className="flex items-center justify-between p-5 bg-white rounded-[2rem] shadow-sm border border-slate-50 hover:shadow-md transition-shadow group">
-              <div className="flex items-center gap-4">
-                <div className="text-2xl w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  {categories.find(c => c.name === tx.category)?.icon || '💸'}
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-slate-900">{tx.description}</h4>
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5 text-[10px] text-slate-400 font-bold">
-                    <span className="uppercase tracking-widest">{tx.category}</span>
-                    {tx.location && (
-                      <span className="flex items-center gap-0.5 text-slate-500 font-medium normal-case">
-                        <MapPin size={10} className="text-slate-400" />
-                        {tx.location}
-                      </span>
-                    )}
-                  </div>
-                  {tx.cardType && (
-                    <div className="mt-1.5 flex gap-1 items-center">
-                      <Badge variant="outline" className="text-[8px] uppercase tracking-wide px-1.5 py-0 rounded-md font-bold text-slate-400 border-slate-200">
-                        {tx.cardType}
-                      </Badge>
-                      {tx.isOverseas && (
-                        <Badge variant="outline" className="text-[8px] uppercase tracking-wide px-1.5 py-0 rounded-md font-bold text-indigo-500 border-indigo-200 bg-indigo-50/50">
-                          Overseas
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="text-right">
-                <p className={cn(
-                  "font-black text-lg tracking-tighter",
-                  tx.type === 'spending' ? 'text-slate-900' : 'text-emerald-500'
-                )}>
-                  {tx.type === 'spending' ? '-' : '+'} RM {tx.amount.toLocaleString()}
-                </p>
-                <div className="mt-1">
-                  <Badge className={cn(
-                    "text-[9px] uppercase font-black px-2 py-0.5 h-auto rounded-md shadow-none",
-                    tx.status === 'pending' ? "bg-amber-100 text-amber-700 animate-pulse border-none" : "",
-                    tx.status === 'completed' ? "bg-emerald-100 text-emerald-700 border-none" : "",
-                    tx.status === 'rejected' ? "bg-rose-100 text-rose-700 border-none" : "",
-                    tx.status === 'approved' ? "bg-teal-100 text-teal-700 border-none" : ""
-                  )}>
-                    {tx.status}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <section className="space-y-4 pb-4">
       </section>
     </div>
   );

@@ -110,7 +110,7 @@ const MOCK_TRANSACTIONS: Transaction[] = [
   },
   {
     id: 't1',
-    userId: 'kid-456',
+    userId: 'kid-455',
     amount: 15,
     type: 'spending',
     category: 'Food',
@@ -150,6 +150,89 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     location: 'Tokyo, Japan (Overseas shop)',
     isOverseas: true,
     cardType: 'virtual'
+  },
+  {
+    id: 't-isac-allowance',
+    userId: 'kid-455',
+    amount: 50,
+    type: 'allowance',
+    category: 'Allowance',
+    description: 'Weekly Allowance from Adam',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 72),
+    isSuspicious: false,
+    location: 'Internal Transfer',
+    isOverseas: false
+  },
+  // Alisya's transactions
+  {
+    id: 't-alisya-1',
+    userId: 'kid-456',
+    amount: 5.50,
+    type: 'spending',
+    category: 'Food',
+    description: 'School Canteen - Nasi Lemak',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 6),
+    isSuspicious: false,
+    location: 'SK Taman Melawati',
+    isOverseas: false,
+    cardType: 'physical'
+  },
+  {
+    id: 't-alisya-2',
+    userId: 'kid-456',
+    amount: 32.90,
+    type: 'spending',
+    category: 'Education',
+    description: 'Popular Bookstore - Exercise Books',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 48),
+    isSuspicious: false,
+    location: 'Wangsa Walk Mall',
+    isOverseas: false,
+    cardType: 'physical'
+  },
+  {
+    id: 't-alisya-3',
+    userId: 'kid-456',
+    amount: 4.00,
+    type: 'spending',
+    category: 'Food',
+    description: 'School Canteen - Milo & Roti',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 30),
+    isSuspicious: false,
+    location: 'SK Taman Melawati',
+    isOverseas: false,
+    cardType: 'physical'
+  },
+  {
+    id: 't-alisya-4',
+    userId: 'kid-456',
+    amount: 18.50,
+    type: 'spending',
+    category: 'Education',
+    description: 'Science Textbook (Year 3)',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 72),
+    isSuspicious: false,
+    location: 'MPH Bookstore',
+    isOverseas: false,
+    cardType: 'physical'
+  },
+  {
+    id: 't-alisya-5',
+    userId: 'kid-456',
+    amount: 25,
+    type: 'allowance',
+    category: 'Allowance',
+    description: 'Weekly Allowance from Adam',
+    status: 'completed',
+    timestamp: new Date(Date.now() - 3600000 * 96),
+    isSuspicious: false,
+    location: 'Internal Transfer',
+    isOverseas: false
   }
 ];
 

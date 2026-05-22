@@ -51,7 +51,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
   const [showReceiveModal, setShowReceiveModal] = useState<boolean>(false);
   
   // Send money modal form states
-  const [sendRecipientId, setSendRecipientId] = useState<string>('kid-456');
+  const [sendRecipientId, setSendRecipientId] = useState<string>('kid-455');
   const [sendAmountText, setSendAmountText] = useState<string>('50');
   const [sendReasonText, setSendReasonText] = useState<string>('Pocket Money');
 
@@ -637,8 +637,8 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
                 title="Tap to see receipt details"
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-xl w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    {tx.isOverseas ? '🌍' : '🇲🇾'}
+                  <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <span className="text-xs font-black text-slate-500 uppercase">{(tx.category || 'TX').slice(0, 2)}</span>
                   </div>
                   <div>
                     <h4 className="font-extrabold text-slate-900 text-sm group-hover:text-slate-950 transition-colors">{tx.description}</h4>
@@ -1283,7 +1283,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
               key={item.id}
               onClick={() => {
                 setSendRecipientId(item.id);
-                setSendReasonText(item.id === 'kid-456' ? 'Chore Achieved Reward' : 'Family Allowance');
+                setSendReasonText(item.id === 'kid-455' ? 'Chore Achieved Reward' : 'Family Allowance');
                 setShowSendModal(true);
               }}
               className="flex flex-col items-center gap-2 snap-start cursor-pointer group shrink-0 outline-none"

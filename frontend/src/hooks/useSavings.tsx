@@ -14,7 +14,7 @@ export interface SavingsGoal {
 const MOCK_GOALS: SavingsGoal[] = [
   {
     id: 'g1',
-    userId: 'kid-456',
+    userId: 'kid-455',
     title: 'University Fund',
     targetAmount: 50000,
     currentAmount: 12000,
@@ -22,11 +22,27 @@ const MOCK_GOALS: SavingsGoal[] = [
   },
   {
     id: 'g2',
-    userId: 'kid-456',
+    userId: 'kid-455',
     title: 'New Laptop',
     targetAmount: 3500,
     currentAmount: 1200,
     category: 'laptop'
+  },
+  {
+    id: 'g3',
+    userId: 'kid-456',
+    title: 'University Fund (SSPN)',
+    targetAmount: 30000,
+    currentAmount: 5500,
+    category: 'university'
+  },
+  {
+    id: 'g4',
+    userId: 'kid-456',
+    title: 'New Bicycle',
+    targetAmount: 800,
+    currentAmount: 350,
+    category: 'bicycle'
   }
 ];
 
