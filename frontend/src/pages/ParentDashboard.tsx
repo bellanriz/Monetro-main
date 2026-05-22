@@ -353,7 +353,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
         uid: 'kid-455', 
         displayName: 'Isac Mikhael', 
         balance: 120, 
-        photoURL: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop', 
+        photoURL: '/images/isac.png', 
         role: 'kid' 
       }
     ];
@@ -1143,7 +1143,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Avatar className="h-14 w-14 border-2 border-slate-200 shadow-md">
-            <AvatarImage src={profile?.photoURL || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop'} />
+            <AvatarImage src={profile?.photoURL || '/images/adam.png'} />
             <AvatarFallback>{profile?.displayName?.[0] || 'A'}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -1273,11 +1273,11 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
 
         <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide snap-x">
           {[
-            { id: 'kid-455', name: 'Isac', avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop' },
-            { id: 'alisya', name: 'Alisya', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop' },
-            { id: 'nadine', name: 'Nadine', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
-            { id: 'kamal', name: 'Kamal', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43E?w=100&h=100&fit=crop' },
-            { id: 'fakhri', name: 'Fakhri', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop' }
+            { id: 'kid-455', name: 'Isac', avatar: '/images/isac.png' },
+            { id: 'alisya', name: 'Alisya', avatar: '/images/alisya.png' },
+            { id: 'nadine', name: 'Nadine', avatar: '/images/nadine.png' },
+            { id: 'kamal', name: 'Kamal', avatar: '/images/grandpa.png' },
+            { id: 'fakhri', name: 'Fakhri', avatar: '/images/isac.png' }
           ].map((item) => (
             <button 
               key={item.id}

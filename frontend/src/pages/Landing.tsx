@@ -36,7 +36,7 @@ export const Landing: React.FC = () => {
       badge: 'Main',
       badgeColor: 'bg-slate-900 text-white border-slate-850',
       tagline: 'Secured with Biometrics',
-      avatar: '/images/Adam.png',
+      avatar: '/images/adam.png',
     },
     {
       id: 'mother',
@@ -47,7 +47,7 @@ export const Landing: React.FC = () => {
       badge: 'Co-Main',
       badgeColor: 'bg-indigo-900 text-white border-indigo-850',
       tagline: 'Secured with Biometrics',
-      avatar: '/images/Nadine.png',
+      avatar: '/images/nadine.png',
     },
     {
       id: 'mama',
@@ -58,7 +58,7 @@ export const Landing: React.FC = () => {
       badge: 'Elder',
       badgeColor: 'bg-emerald-800 text-white border-emerald-700',
       tagline: 'Allowance Recipient',
-      avatar: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=120&h=120&fit=crop',
+      avatar: '/images/grandma.png',
     },
     {
       id: 'ayah',
@@ -69,7 +69,7 @@ export const Landing: React.FC = () => {
       badge: 'Elder',
       badgeColor: 'bg-emerald-800 text-white border-emerald-700',
       tagline: 'Allowance Recipient',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
+      avatar: '/images/grandpa.png',
     },
     // Kid profiles
     {
@@ -81,7 +81,7 @@ export const Landing: React.FC = () => {
       badge: 'Saver Pro',
       badgeColor: 'bg-[#CCFF00] text-slate-950 border-[#CCFF00]/10',
       tagline: 'Daily Streak: 12 days 🔥',
-      avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=120&h=120&fit=crop',
+      avatar: '/images/isac.png',
     },
     {
       id: 'Alisya',
@@ -92,7 +92,7 @@ export const Landing: React.FC = () => {
       badge: 'Tiny Cat',
       badgeColor: 'bg-amber-100 text-amber-700 border-amber-250',
       tagline: 'Daily Streak: 5 days 🔥',
-      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop',
+      avatar: '/images/alisya.png',
     }
   ];
 

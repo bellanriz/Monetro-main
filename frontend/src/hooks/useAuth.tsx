@@ -29,7 +29,7 @@ const MOCK_PARENT: UserProfile = {
   role: 'parent',
   balance: 5420,
   savingsBalance: 12000,
-  photoURL: '/images/Adam.png'
+  photoURL: '/images/adam.png'
 };
 
 const MOCK_KID: UserProfile = {
@@ -40,7 +40,7 @@ const MOCK_KID: UserProfile = {
   balance: 120,
   savingsBalance: 450,
   parentId: 'parent-123',
-  photoURL: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop',
+  photoURL: '/images/isac.png',
 };
 
 const MOCK_ELDER: UserProfile = {
@@ -51,7 +51,7 @@ const MOCK_ELDER: UserProfile = {
   balance: 2800,
   savingsBalance: 5000,
   parentId: 'parent-123',
-  photoURL: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=120&h=120&fit=crop',
+  photoURL: '/images/grandma.png',
 };
 
 const MOCK_ELDER_DAD: UserProfile = {
@@ -62,7 +62,7 @@ const MOCK_ELDER_DAD: UserProfile = {
   balance: 3200,
   savingsBalance: 8500,
   parentId: 'parent-123',
-  photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
+  photoURL: '/images/grandpa.png',
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
