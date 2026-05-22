@@ -87,7 +87,7 @@ function AppContent() {
           </div>
 
           {/* Content Viewport */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-white">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-white pt-[env(safe-area-inset-top)]">
             <Landing />
           </div>
         </div>
@@ -127,7 +127,7 @@ function AppContent() {
         <div 
           ref={viewportRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-slate-50"
+          className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-slate-50 pt-[env(safe-area-inset-top)]"
         >
           <div className="pb-32 bg-slate-50 min-h-full">
             {profile?.role === 'parent' ? (
