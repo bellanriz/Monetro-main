@@ -50,14 +50,25 @@ export const Landing: React.FC = () => {
       avatar: '/images/Nadine.png',
     },
     {
-      id: 'guardian',
+      id: 'mama',
       role: 'parent',
-      name: 'Grandpa Kamal',
-      title: 'Backup Adam',
-      desc: 'Provides saving rewards, grants quest bonus funds',
-      badge: 'Guardian',
-      badgeColor: 'bg-blue-950 text-white border-blue-900',
-      tagline: 'Alternative access key',
+      name: 'Mama',
+      title: 'Elder (Retired)',
+      desc: 'Receives monthly allowance, views spending & savings balance',
+      badge: 'Elder',
+      badgeColor: 'bg-emerald-800 text-white border-emerald-700',
+      tagline: 'Allowance Recipient',
+      avatar: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=120&h=120&fit=crop',
+    },
+    {
+      id: 'ayah',
+      role: 'parent',
+      name: 'Ayah',
+      title: 'Elder (Retired)',
+      desc: 'Receives monthly allowance, views spending & savings balance',
+      badge: 'Elder',
+      badgeColor: 'bg-emerald-800 text-white border-emerald-700',
+      tagline: 'Allowance Recipient',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
     },
     // Kid profiles
@@ -105,7 +116,10 @@ export const Landing: React.FC = () => {
       if (newPin.length === 4) {
         setIsSuccess(true);
         setTimeout(() => {
-          if (selectedType) {
+          const selectedProfile = profiles.find(p => p.id === selectedProfileId);
+          if (selectedProfile?.id === 'mama' || selectedProfile?.id === 'ayah') {
+            login('elder');
+          } else if (selectedType) {
             login(selectedType);
           }
         }, 600);
@@ -404,7 +418,10 @@ export const Landing: React.FC = () => {
                     setPin('1234');
                     setIsSuccess(true);
                     setTimeout(() => {
-                      if (selectedType) {
+                      const selectedProfile = profiles.find(p => p.id === selectedProfileId);
+                      if (selectedProfile?.id === 'mama' || selectedProfile?.id === 'ayah') {
+                        login('elder');
+                      } else if (selectedType) {
                         login(selectedType);
                       }
                     }, 600);

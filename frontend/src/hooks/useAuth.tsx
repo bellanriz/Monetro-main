@@ -4,7 +4,7 @@ interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
-  role: 'parent' | 'kid';
+  role: 'parent' | 'kid' | 'elder';
   balance: number;
   savingsBalance: number;
   photoURL?: string;
@@ -15,7 +15,7 @@ interface AuthContextType {
   user: any | null;
   profile: UserProfile | null;
   loading: boolean;
-  login: (role?: 'parent' | 'kid') => Promise<void>;
+  login: (role?: 'parent' | 'kid' | 'elder') => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -35,12 +35,23 @@ const MOCK_PARENT: UserProfile = {
 const MOCK_KID: UserProfile = {
   uid: 'kid-456',
   email: 'kid@example.com',
-  displayName: 'Oliver Kid',
+  displayName: 'Isac',
   role: 'kid',
   balance: 120,
   savingsBalance: 450,
   parentId: 'parent-123',
   photoURL: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop',
+};
+
+const MOCK_ELDER: UserProfile = {
+  uid: 'elder-789',
+  email: 'mama@example.com',
+  displayName: 'Mama',
+  role: 'elder',
+  balance: 2800,
+  savingsBalance: 5000,
+  parentId: 'parent-123',
+  photoURL: 'https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=120&h=120&fit=crop',
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -53,7 +64,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedProfile) {
       const p = JSON.parse(savedProfile);
       // Always use fresh mock data to pick up any code changes
-      const freshProfile = p.role === 'parent' ? MOCK_PARENT : MOCK_KID;
+      let freshProfile: UserProfile;
+      if (p.role === 'elder') {
+        freshProfile = MOCK_ELDER;
+      } else if (p.role === 'kid') {
+        freshProfile = MOCK_KID;
+      } else {
+        freshProfile = MOCK_PARENT;
+      }
       setProfile(freshProfile);
       setUser({ uid: freshProfile.uid });
       localStorage.setItem('famwallet_profile', JSON.stringify(freshProfile));
@@ -61,8 +79,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   }, []);
 
-  const login = async (role: 'parent' | 'kid' = 'parent') => {
-    const p = role === 'parent' ? MOCK_PARENT : MOCK_KID;
+  const login = async (role: 'parent' | 'kid' | 'elder' = 'parent') => {
+    let p: UserProfile;
+    if (role === 'elder') {
+      p = MOCK_ELDER;
+    } else if (role === 'kid') {
+      p = MOCK_KID;
+    } else {
+      p = MOCK_PARENT;
+    }
     setProfile(p);
     setUser({ uid: p.uid });
     localStorage.setItem('famwallet_profile', JSON.stringify(p));

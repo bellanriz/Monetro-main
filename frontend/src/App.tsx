@@ -7,6 +7,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { ParentDashboard } from './pages/ParentDashboard';
 import { KidDashboard } from './pages/KidDashboard';
+import { ElderDashboard } from './pages/ElderDashboard';
 import { Landing } from './pages/Landing';
 import { Toaster } from './components/ui/sonner';
 import { Navbar } from './components/layout/Navbar';
@@ -59,7 +60,7 @@ function AppContent() {
 
   if (!user) {
     return (
-      <div className="h-[100dvh] bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+      <div className="h-[100dvh] bg-white md:bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 md:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] md:from-slate-900 md:via-slate-950 md:to-black">
         {/* Background Ambience on Desktop */}
         <div className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -87,7 +88,7 @@ function AppContent() {
           </div>
 
           {/* Content Viewport */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-white pt-[env(safe-area-inset-top)]">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-white">
             <Landing />
           </div>
         </div>
@@ -96,7 +97,7 @@ function AppContent() {
   }
 
   return (
-    <div className="h-[100dvh] bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+    <div className="h-[100dvh] bg-slate-50 md:bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 md:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] md:from-slate-900 md:via-slate-950 md:to-black">
       {/* Background Ambience on Desktop */}
       <div className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -127,11 +128,13 @@ function AppContent() {
         <div 
           ref={viewportRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-slate-50 pt-[env(safe-area-inset-top)]"
+          className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-slate-50"
         >
-          <div className="pb-40 bg-slate-50 min-h-full">
+          <div className="pt-[env(safe-area-inset-top)] pb-40 bg-slate-50 min-h-full">
             {profile?.role === 'parent' ? (
               <ParentDashboard activeTab={activeTab} />
+            ) : profile?.role === 'elder' ? (
+              <ElderDashboard activeTab={activeTab} />
             ) : (
               <KidDashboard activeTab={activeTab} />
             )}

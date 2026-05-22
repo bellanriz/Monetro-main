@@ -99,7 +99,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
   ]);
   const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [newCardHolder, setNewCardHolder] = useState('');
-  const [newCardType, setNewCardType] = useState('Kid Debit');
+  const [newCardType, setNewCardType] = useState('Kid');
   const [newCardBrand, setNewCardBrand] = useState('VISA');
   const [newCardBalance, setNewCardBalance] = useState('505');
 
@@ -149,20 +149,25 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
     const cardNumber = `•••• •••• •••• ${randomSuffix}`;
 
-    // Select color gradient
-    const gradients = [
-      'from-[#3F2B96] to-[#A8C0FF]', // Royal violet
-      'from-[#11998e] to-[#38ef7d]', // Emerald green
-      'from-[#FF5F6D] to-[#FFC371]', // Warm coral
-      'from-[#121214] to-[#3a3a3c]'  // Sleek charcoal
-    ];
-    const randGradient = gradients[familyCards.length % gradients.length];
+    // Select color gradient based on type
+    const gradientsByType: Record<string, string> = {
+      'Kid': 'from-[#3F2B96] to-[#A8C0FF]',
+      'Spouse': 'from-[#FF5F6D] to-[#FFC371]',
+      'Parent': 'from-[#11998e] to-[#38ef7d]',
+    };
+    const randGradient = gradientsByType[newCardType] || 'from-[#121214] to-[#3a3a3c]';
+
+    const titleMap: Record<string, string> = {
+      'Kid': `${newCardHolder} (Kid's Card)`,
+      'Spouse': `${newCardHolder} (Spouse Card)`,
+      'Parent': `${newCardHolder} (Parent Allowance)`,
+    };
 
     const newCard = {
       id: `fc-${Date.now()}`,
       holder: newCardHolder,
-      title: `${newCardHolder} (${newCardType === 'Kid Debit' ? "Kid's Card" : "Wife's Card"})`,
-      type: newCardType,
+      title: titleMap[newCardType] || `${newCardHolder}'s Card`,
+      type: newCardType === 'Kid' ? 'Kid Debit' : newCardType === 'Parent' ? 'Parent Allowance' : 'Spouse Debit',
       brand: newCardBrand,
       number: cardNumber,
       balance: balanceNum,
@@ -172,8 +177,13 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
     setFamilyCards([...familyCards, newCard]);
     setShowAddCardModal(false);
     setNewCardHolder('');
+    setNewCardType('Kid');
     setNewCardBalance('500');
-    toast.success(`💳 Linked ${newCardHolder}'s new ${newCardType} successfully!`);
+    
+    const successMsg = newCardType === 'Parent' 
+      ? `💳 Issued allowance card for ${newCardHolder}! Annual funds will be disbursed on schedule.`
+      : `💳 Linked ${newCardHolder}'s new ${newCardType} card successfully!`;
+    toast.success(successMsg);
   };
 
   const scannerInstanceRef = useRef<Html5Qrcode | null>(null);
@@ -752,7 +762,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
               </div>
               <div className="space-y-0.5">
                 <p className="text-sm font-extrabold text-slate-800">Add Family Card</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Link Spouse or Kid card</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Kid, Spouse, or Parent</p>
               </div>
             </motion.div>
 
@@ -1983,7 +1993,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
  
               <div className="space-y-1 text-center">
                 <h4 className="text-xl font-black text-slate-950">Add Family Card</h4>
-                <p className="text-xs text-slate-400">Link security controls & pocket balances instantly</p>
+                <p className="text-xs text-slate-400">Issue cards to kids, spouse, or parents (annual allowance)</p>
               </div>
  
               <div className="space-y-4">
@@ -1995,11 +2005,11 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
                     value={newCardHolder}
                     onChange={(e) => setNewCardHolder(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl h-12 px-4 font-bold text-slate-900 text-sm focus:outline-none"
-                    placeholder="Enter name (e.g. Alisya, Nadine)"
+                    placeholder="Enter name (e.g. Alisya, Mama, Ayah)"
                   />
                   {/* Preset quick recommendations */}
                   <div className="flex gap-1.5 pt-1 overflow-x-auto scrollbar-hide">
-                    {['Alisya', 'Nadine', 'Kamal', 'Fakhri'].map((nameSuggested) => (
+                    {['Isac', 'Alisya', 'Nadine', 'Mama', 'Ayah', 'Kamal'].map((nameSuggested) => (
                       <button
                         key={nameSuggested}
                         onClick={() => setNewCardHolder(nameSuggested)}
@@ -2013,9 +2023,9 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
  
                 {/* 2. Card Type Tag Select */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Relationship Card Type</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {['Kid Debit', 'Spouse Debit'].map((typeOption) => (
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Relationship Type</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['Kid', 'Spouse', 'Parent'].map((typeOption) => (
                       <button
                         key={typeOption}
                         onClick={() => setNewCardType(typeOption)}
@@ -2028,7 +2038,31 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
                       </button>
                     ))}
                   </div>
+                  <p className="text-[9px] text-slate-400 font-medium pl-1">
+                    {newCardType === 'Parent' && '💡 For retired parents — set annual allowance & monitor spending'}
+                    {newCardType === 'Kid' && '💡 For children — set weekly/monthly limits & approve transactions'}
+                    {newCardType === 'Spouse' && '💡 For spouse — shared family budget with full access'}
+                  </p>
                 </div>
+
+                {/* 3. Allowance Frequency (for Kid & Parent) */}
+                {(newCardType === 'Kid' || newCardType === 'Parent') && (
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                      {newCardType === 'Parent' ? 'Annual Allowance Schedule' : 'Allowance Schedule'}
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(newCardType === 'Parent' ? ['Monthly', 'Quarterly', 'Annually'] : ['Weekly', 'Bi-Weekly', 'Monthly']).map((freq) => (
+                        <button
+                          key={freq}
+                          className="h-10 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 font-bold text-[10px] transition-colors border border-slate-100"
+                        >
+                          {freq}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
  
                 {/* 3. Card Brand Option */}
                 <div className="space-y-1.5">
@@ -2051,7 +2085,9 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
  
                 {/* 4. Initial balance input */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Initial Balance Limit (RM)</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                    {newCardType === 'Parent' ? 'Annual Allowance Amount (RM)' : 'Initial Balance Limit (RM)'}
+                  </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-slate-600 text-sm">RM</span>
                     <input 
@@ -2068,7 +2104,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
                   onClick={handleAddFamilyCard}
                   className="w-full bg-slate-950 hover:bg-slate-900 text-white font-black rounded-2xl h-14 text-sm mt-2 shadow-xl shadow-slate-950/10"
                 >
-                  Link Card Instantly
+                  {newCardType === 'Parent' ? 'Issue Parent Allowance Card' : 'Link Card Instantly'}
                 </Button>
               </div>
             </motion.div>
