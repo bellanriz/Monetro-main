@@ -36,7 +36,7 @@ export const Landing: React.FC = () => {
       badge: 'Main',
       badgeColor: 'bg-slate-900 text-white border-slate-850',
       tagline: 'Secured with Biometrics',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop',
+      avatar: '/images/Adam.png',
     },
     {
       id: 'mother',
@@ -47,7 +47,7 @@ export const Landing: React.FC = () => {
       badge: 'Co-Main',
       badgeColor: 'bg-indigo-900 text-white border-indigo-850',
       tagline: 'Secured with Biometrics',
-      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop',
+      avatar: '/images/Nadine.png',
     },
     {
       id: 'guardian',

@@ -10,6 +10,7 @@ import { useTransactions } from '../hooks/useTransactions';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Html5Qrcode } from 'html5-qrcode';
+import { SendMoneyScreen } from './SendMoneyScreen';
 
 interface KidInfo {
   uid: string;
@@ -1848,96 +1849,16 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
         )}
       </AnimatePresence>
 
-      {/* MODAL 2: SEND CASH POPUP */}
+      {/* MODAL 2: SEND MONEY SCREEN */}
       <AnimatePresence>
         {showSendModal && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end justify-center"
-          >
-            <motion.div 
-              initial={{ y: 200 }}
-              animate={{ y: 0 }}
-              exit={{ y: 200 }}
-              className="bg-white rounded-t-[3rem] w-full max-w-md p-8 space-y-6 shadow-2xl relative"
-            >
-              <button 
-                onClick={() => setShowSendModal(false)}
-                className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-700"
-              >
-                <XCircle size={20} />
-              </button>
-
-              <div className="space-y-1 text-center">
-                <h4 className="text-xl font-black text-slate-950">Send Money Instantly</h4>
-                <p className="text-xs text-slate-400">Transfer parent funds straight to child pockets</p>
-              </div>
-
-              {/* Recipient select item */}
-              <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-700">
-                  👦
-                </div>
-                <div>
-                  <h5 className="text-xs font-black text-slate-900">Registered Recipient</h5>
-                  <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
-                    {sendRecipientId === 'kid-456' ? "Isac Kid (SSPN Wallet)" : "Co-Parent Wallet"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Amount Inputs */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Amount (RM)</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-slate-900 text-lg">RM</span>
-                  <input 
-                    type="number" 
-                    value={sendAmountText}
-                    onChange={(e) => setSendAmountText(e.target.value)}
-                    className="w-full bg-slate-50 rounded-2xl h-14 pl-12 pr-4 font-black text-slate-950 text-xl focus:outline-none focus:ring-2 focus:ring-slate-950 focus:bg-white"
-                    placeholder="50"
-                  />
-                </div>
-              </div>
-
-              {/* Reason / Title */}
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Transfer Reason</label>
-                <input 
-                  type="text" 
-                  value={sendReasonText}
-                  onChange={(e) => setSendReasonText(e.target.value)}
-                  className="w-full bg-slate-50 rounded-2xl h-12 px-4 text-xs font-bold text-slate-950 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:bg-white"
-                  placeholder="Task prize reward"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                {['10', '50', '150'].map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setSendAmountText(p)}
-                    className={cn(
-                      "h-10 rounded-xl font-bold text-xs transition-all border border-slate-100",
-                      sendAmountText === p ? "bg-slate-950 text-white" : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                    )}
-                  >
-                    RM {p}
-                  </button>
-                ))}
-              </div>
-
-              <Button 
-                onClick={handleSendCashSimulated}
-                className="w-full bg-slate-950 hover:bg-slate-800 text-white font-black rounded-2xl h-14 text-sm shadow-xl shadow-slate-950/10 transition-transform active:scale-95"
-              >
-                Execute Direct Transfer
-              </Button>
-            </motion.div>
-          </motion.div>
+          <SendMoneyScreen
+            onSuccess={() => {
+              setShowSendModal(false);
+              toast.success('Transfer completed successfully! 💸');
+            }}
+            onBack={() => setShowSendModal(false)}
+          />
         )}
       </AnimatePresence>
 

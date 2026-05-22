@@ -59,13 +59,13 @@ function AppContent() {
 
   if (!user) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-slate-950 font-sans p-0 md:p-6 overflow-hidden select-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+      <div className="h-[100dvh] bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
         {/* Background Ambience on Desktop */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Device Mock Frame (looks like an iPhone on desktop, full bleed on mobile) */}
-        <div className="w-full h-[100dvh] md:max-w-[412px] md:h-[844px] md:rounded-[3.5rem] md:border-[12px] md:border-slate-900 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] md:ring-1 md:ring-white/10 md:overflow-hidden relative bg-white flex flex-col justify-between select-text">
+        <div className="w-full h-full md:max-w-[412px] md:h-[844px] md:rounded-[3.5rem] md:border-[12px] md:border-slate-900 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] md:ring-1 md:ring-white/10 md:overflow-hidden relative bg-white flex flex-col select-text">
           
           {/* Dynamic Notch / Island & Status Bar on Desktop */}
           <div className="hidden md:flex justify-between items-center px-8 pt-4 pb-2 bg-white/85 backdrop-blur-md sticky top-0 z-50 text-slate-950 select-none border-b border-slate-100/60">
@@ -96,13 +96,13 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-slate-950 font-sans p-0 md:p-6 overflow-hidden select-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+    <div className="h-[100dvh] bg-slate-950 font-sans overflow-hidden select-none md:flex md:items-center md:justify-center md:p-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
       {/* Background Ambience on Desktop */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Device Mock Frame (looks like an iPhone on desktop, full bleed on mobile) */}
-      <div className="w-full h-[100dvh] md:max-w-[412px] md:h-[844px] md:rounded-[3.5rem] md:border-[12px] md:border-slate-900 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] md:ring-1 md:ring-white/10 md:overflow-hidden relative bg-slate-50 flex flex-col justify-between select-text">
+      <div className="w-full h-full md:max-w-[412px] md:h-[844px] md:rounded-[3.5rem] md:border-[12px] md:border-slate-900 md:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] md:ring-1 md:ring-white/10 md:overflow-hidden relative bg-slate-50 flex flex-col select-text">
         
         {/* Dynamic Notch / Island & Status Bar on Desktop */}
         <div className="hidden md:flex justify-between items-center px-8 pt-4 pb-2 bg-slate-50/80 backdrop-blur-md sticky top-0 z-50 text-slate-900 select-none border-b border-slate-100/30">
@@ -129,7 +129,7 @@ function AppContent() {
           onScroll={handleScroll}
           className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide bg-slate-50 pt-[env(safe-area-inset-top)]"
         >
-          <div className="pb-32 bg-slate-50 min-h-full">
+          <div className="pb-40 bg-slate-50 min-h-full">
             {profile?.role === 'parent' ? (
               <ParentDashboard activeTab={activeTab} />
             ) : (
