@@ -716,30 +716,15 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
         </header>
 
         <section className="space-y-4">
-          <div className="flex items-center justify-between pl-1">
-            <div className="flex flex-col">
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Family Cards Dashboard</h3>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">← Swipe or Drag Cards →</p>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <button 
-                onClick={() => scrollCards('left')}
-                className="w-7 h-7 bg-slate-50 border border-slate-150 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 active:scale-90 transition-all shadow-sm"
-                title="Scroll Left"
-              >
-                <ChevronLeft size={14} className="stroke-[2.5]" />
-              </button>
-              <button 
-                onClick={() => scrollCards('right')}
-                className="w-7 h-7 bg-slate-50 border border-slate-150 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 active:scale-90 transition-all shadow-sm"
-                title="Scroll Right"
-              >
-                <ChevronRight size={14} className="stroke-[2.5]" />
-              </button>
-              <span className="text-[10px] text-emerald-500 font-bold uppercase py-0.5 px-2 bg-emerald-50 rounded-full ml-1">Secure SSL</span>
-            </div>
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-sm font-black text-slate-900">Family Cards</h3>
+            <button
+              onClick={() => setShowAddCardModal(true)}
+              className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-white hover:bg-slate-700 active:scale-90 transition-all shadow-sm"
+            >
+              <Plus size={16} strokeWidth={2.5} />
+            </button>
           </div>
-
           <div 
             ref={cardsSliderRef}
             onMouseDown={handleCardsMouseDown}
