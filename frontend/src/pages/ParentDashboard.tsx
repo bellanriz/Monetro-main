@@ -49,6 +49,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
   const [showQrModal, setShowQrModal] = useState<boolean>(false);
   const [showSendModal, setShowSendModal] = useState<boolean>(false);
   const [showReceiveModal, setShowReceiveModal] = useState<boolean>(false);
+  const [showFamilySavings, setShowFamilySavings] = useState<boolean>(false);
   
   // Send money modal form states
   const [sendRecipientId, setSendRecipientId] = useState<string>('kid-455');
@@ -82,9 +83,9 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       title: "Isac Mikhael (Kid's Card)",
       type: 'Kid Debit',
       brand: 'VISA',
-      number: '•••• •••• •••• 7854',
+      number: '7854',
       balance: 120.00,
-      gradient: 'from-[#00C6FF] to-[#0072FF]'
+      theme: 'green'
     },
     {
       id: 'fc2',
@@ -92,9 +93,39 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       title: "Nadine (Wife's Card)",
       type: 'Spouse Debit',
       brand: 'MasterCard',
-      number: '•••• •••• •••• 1092',
+      number: '1092',
       balance: 14350.00,
-      gradient: 'from-[#FF512F] to-[#DD2476]'
+      theme: 'black'
+    },
+    {
+      id: 'fc3',
+      holder: 'Alisya',
+      title: "Alisya (Kid's Card)",
+      type: 'Kid Debit',
+      brand: 'VISA',
+      number: '3261',
+      balance: 85.00,
+      theme: 'white'
+    },
+    {
+      id: 'fc4',
+      holder: 'Mom',
+      title: "Mom (Parent Allowance)",
+      type: 'Parent Allowance',
+      brand: 'MasterCard',
+      number: '5478',
+      balance: 3200.00,
+      theme: 'green'
+    },
+    {
+      id: 'fc5',
+      holder: 'Dad',
+      title: "Dad (Parent Allowance)",
+      type: 'Parent Allowance',
+      brand: 'VISA',
+      number: '9103',
+      balance: 2800.00,
+      theme: 'black'
     }
   ]);
   const [showAddCardModal, setShowAddCardModal] = useState(false);
@@ -147,15 +178,15 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
     
     // Random card number
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const cardNumber = `•••• •••• •••• ${randomSuffix}`;
+    const cardNumber = `${randomSuffix}`;
 
-    // Select color gradient based on type
-    const gradientsByType: Record<string, string> = {
-      'Kid': 'from-[#3F2B96] to-[#A8C0FF]',
-      'Spouse': 'from-[#FF5F6D] to-[#FFC371]',
-      'Parent': 'from-[#11998e] to-[#38ef7d]',
+    // Select theme based on type
+    const themesByType: Record<string, string> = {
+      'Kid': 'green',
+      'Spouse': 'white',
+      'Parent': 'black',
     };
-    const randGradient = gradientsByType[newCardType] || 'from-[#121214] to-[#3a3a3c]';
+    const theme = themesByType[newCardType] || 'black';
 
     const titleMap: Record<string, string> = {
       'Kid': `${newCardHolder} (Kid's Card)`,
@@ -171,7 +202,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       brand: newCardBrand,
       number: cardNumber,
       balance: balanceNum,
-      gradient: randGradient
+      theme: theme
     };
 
     setFamilyCards([...familyCards, newCard]);
@@ -497,7 +528,7 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
       <div className="max-w-md mx-auto p-6 space-y-8 pb-32 animate-in fade-in duration-500">
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Parent Funds</h2>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Wallet</h2>
             <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Fund and Grant Chores</p>
           </div>
           <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
@@ -526,37 +557,6 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
             </span>
           </div>
         </Card>
-
-        {/* Dynamic Pocket Money Direct Deposit */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between pl-1">
-            <h3 className="text-lg font-black text-slate-900 tracking-tight">Fund Isac's Savings</h3>
-            <span className="text-[10px] text-slate-400 uppercase font-bold">Direct SSPN Cash</span>
-          </div>
-          <Card className="border border-slate-100 bg-white rounded-3xl p-5 flex items-center justify-between shadow-sm">
-            <div className="space-y-1">
-              <h4 className="font-extrabold text-sm text-slate-950">Add SSPN Reward Deposit</h4>
-              <p className="text-xs text-slate-400 font-medium">Quick grant for school achievements</p>
-            </div>
-            <Button 
-              onClick={async () => {
-                await addTransaction({
-                  amount: 50,
-                  type: 'allowance',
-                  description: 'SSPN Achievement Reward',
-                  category: 'Allowance',
-                  status: 'completed',
-                  location: 'Kuala Lumpur',
-                  isOverseas: false
-                });
-                toast.success("Deposited RM 50.00 into Isac's savings pocket!");
-              }}
-              className="bg-slate-950 hover:bg-slate-800 text-white font-black rounded-2xl h-11 px-4 text-xs transition-transform active:scale-95 shadow-md shadow-slate-955/10"
-            >
-              Transfer RM 50
-            </Button>
-          </Card>
-        </div>
 
         {/* Kids Card Integration Tab - User Requested */}
         <div className="space-y-4 pt-2">
@@ -715,6 +715,222 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
           </div>
         </header>
 
+        {/* Family Savings Button */}
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setShowFamilySavings(true)}
+          className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-3xl p-5 shadow-lg flex items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+              <Coins size={22} className="text-white" />
+            </div>
+            <div>
+              <h4 className="font-black text-white text-sm">Family Savings</h4>
+              <p className="text-[10px] text-white/70 font-bold">SSPN, Emergency & Renovation Funds</p>
+            </div>
+          </div>
+          <ChevronRight size={20} className="text-white/70" />
+        </motion.button>
+
+        {/* Family Savings Full Page Overlay */}
+        <AnimatePresence>
+          {showFamilySavings && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed inset-0 bg-[#f4f4f7] z-[60] overflow-y-auto pb-32 md:max-w-[440px] md:mx-auto"
+            >
+              <div className="p-6 space-y-6">
+                {/* Header */}
+                <div className="flex items-center justify-between pt-2">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setShowFamilySavings(false)}
+                      className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-100 shadow-sm text-slate-700 hover:bg-slate-50 active:scale-95 transition-all"
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <div>
+                      <h2 className="text-2xl font-black text-slate-900 tracking-tight">Family Savings</h2>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Managed by Adam</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Total Savings Overview */}
+                <Card className="bg-slate-900 text-white border-none shadow-xl rounded-[2.5rem] p-6 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <p className="text-[9px] text-white/50 font-black uppercase tracking-widest">Total Family Savings</p>
+                  <p className="text-3xl font-black text-white tracking-tight mt-1">RM 41,800.00</p>
+                  <div className="flex gap-3 mt-3">
+                    <span className="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">4 Active Goals</span>
+                    <span className="text-[9px] font-bold text-purple-400 bg-purple-500/10 px-2 py-1 rounded-full">5 Members</span>
+                  </div>
+                </Card>
+
+                {/* Isac - SSPN */}
+                <Card className="border border-slate-100 bg-white rounded-3xl p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <img src="/images/isac.png" alt="Isac" className="w-9 h-9 rounded-full object-cover border border-slate-200" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-sm text-slate-950">Isac's SSPN Fund</h4>
+                        <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full border border-blue-100">Son</span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium">School achievement rewards</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Saved</p>
+                      <p className="text-sm font-black text-slate-900">RM 2,400</p>
+                    </div>
+                    <Button 
+                      onClick={async () => {
+                        await addTransaction({
+                          amount: 50,
+                          type: 'allowance',
+                          description: 'SSPN Achievement Reward - Isac',
+                          category: 'Allowance',
+                          status: 'completed',
+                          location: 'Kuala Lumpur',
+                          isOverseas: false
+                        });
+                        toast.success("Deposited RM 50.00 into Isac's SSPN savings!");
+                      }}
+                      className="bg-slate-950 hover:bg-slate-800 text-white font-black rounded-2xl h-11 px-4 text-xs transition-transform active:scale-95 shadow-md"
+                    >
+                      Transfer RM 50
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Alisya - SSPN */}
+                <Card className="border border-slate-100 bg-white rounded-3xl p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <img src="/images/alisya.png" alt="Alisya" className="w-9 h-9 rounded-full object-cover border border-slate-200" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-sm text-slate-950">Alisya's SSPN Fund</h4>
+                        <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 bg-pink-50 text-pink-600 rounded-full border border-pink-100">Daughter</span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium">School achievement rewards</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Saved</p>
+                      <p className="text-sm font-black text-slate-900">RM 1,800</p>
+                    </div>
+                    <Button 
+                      onClick={async () => {
+                        await addTransaction({
+                          amount: 50,
+                          type: 'allowance',
+                          description: 'SSPN Achievement Reward - Alisya',
+                          category: 'Allowance',
+                          status: 'completed',
+                          location: 'Kuala Lumpur',
+                          isOverseas: false
+                        });
+                        toast.success("Deposited RM 50.00 into Alisya's SSPN savings!");
+                      }}
+                      className="bg-slate-950 hover:bg-slate-800 text-white font-black rounded-2xl h-11 px-4 text-xs transition-transform active:scale-95 shadow-md"
+                    >
+                      Transfer RM 50
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Nadine - Emergency Fund */}
+                <Card className="border border-rose-100 bg-gradient-to-br from-white to-rose-50/30 rounded-3xl p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <img src="/images/nadine.png" alt="Nadine" className="w-9 h-9 rounded-full object-cover border border-rose-200" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-sm text-slate-950">Emergency Fund</h4>
+                        <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 bg-rose-50 text-rose-600 rounded-full border border-rose-100">Wife</span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium">Joint emergency savings with Nadine</p>
+                    </div>
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="bg-rose-500 h-full rounded-full transition-all" style={{ width: '62%' }} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">RM 18,600 / RM 30,000</p>
+                      <p className="text-sm font-black text-slate-900">62% reached</p>
+                    </div>
+                    <Button 
+                      onClick={async () => {
+                        await addTransaction({
+                          amount: 200,
+                          type: 'savings',
+                          description: 'Emergency Fund Deposit',
+                          category: 'Emergency',
+                          status: 'completed',
+                          location: 'Joint Account - Nadine',
+                          isOverseas: false
+                        });
+                        toast.success("Deposited RM 200.00 into Emergency Fund (Nadine)!");
+                      }}
+                      className="bg-rose-500 hover:bg-rose-600 text-white font-black rounded-2xl h-11 px-4 text-xs transition-transform active:scale-95 shadow-md shadow-rose-500/15"
+                    >
+                      Transfer RM 200
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Mom & Dad - House Renovation */}
+                <Card className="border border-amber-100 bg-gradient-to-br from-white to-amber-50/30 rounded-3xl p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex -space-x-2">
+                      <img src="/images/grandma.png" alt="Mom" className="w-9 h-9 rounded-full object-cover border-2 border-white" />
+                      <img src="/images/grandpa.png" alt="Dad" className="w-9 h-9 rounded-full object-cover border-2 border-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-sm text-slate-950">House Renovation</h4>
+                        <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 bg-amber-50 text-amber-600 rounded-full border border-amber-100">Parents</span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium">Renovation fund for Mom & Dad's house</p>
+                    </div>
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="bg-amber-500 h-full rounded-full transition-all" style={{ width: '38%' }} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">RM 19,000 / RM 50,000</p>
+                      <p className="text-sm font-black text-slate-900">38% reached</p>
+                    </div>
+                    <Button 
+                      onClick={async () => {
+                        await addTransaction({
+                          amount: 500,
+                          type: 'savings',
+                          description: 'House Renovation Fund',
+                          category: 'Renovation',
+                          status: 'completed',
+                          location: 'Parents House Fund',
+                          isOverseas: false
+                        });
+                        toast.success("Deposited RM 500.00 into Parents House Renovation Fund!");
+                      }}
+                      className="bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl h-11 px-4 text-xs transition-transform active:scale-95 shadow-md shadow-amber-500/15"
+                    >
+                      Transfer RM 500
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <section className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <h3 className="text-sm font-black text-slate-900">Family Cards</h3>
@@ -725,69 +941,114 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
               <Plus size={16} strokeWidth={2.5} />
             </button>
           </div>
-          <div 
-            ref={cardsSliderRef}
-            onMouseDown={handleCardsMouseDown}
-            onMouseMove={handleCardsMouseMove}
-            onMouseUp={stopCardsDragging}
-            onMouseLeave={stopCardsDragging}
-            className={cn(
-              "flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x pr-2 select-none touch-pan-x",
-              isDraggingCards ? "cursor-grabbing" : "cursor-grab"
-            )}
-          >
-            {/* Add Card Button styled as an elegant dashed card placeholder */}
+
+          {/* Stacked vertical card layout */}
+          <div className="space-y-4">
+            {familyCards.map((card, index) => {
+              const isGreen = card.theme === 'green';
+              const isBlack = card.theme === 'black';
+              const isWhite = card.theme === 'white';
+
+              return (
+                <motion.div
+                  key={card.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "w-full rounded-[2rem] p-6 relative overflow-hidden shadow-lg min-h-[180px] flex flex-col justify-between",
+                    isGreen && "bg-[#a3e635]",
+                    isBlack && "bg-[#121214]",
+                    isWhite && "bg-white border border-slate-200"
+                  )}
+                >
+                  {/* Monetro watermark */}
+                  <span className={cn(
+                    "absolute bottom-6 left-6 text-[48px] font-black italic tracking-tighter leading-none select-none pointer-events-none",
+                    isGreen && "text-[#8bc62a]/40",
+                    isBlack && "text-white/[0.06]",
+                    isWhite && "text-slate-200/60"
+                  )}>
+                    Monetro
+                  </span>
+
+                  {/* Top row: Name + Brand */}
+                  <div className="flex justify-between items-start relative z-10">
+                    <div>
+                      <p className={cn(
+                        "text-sm font-black",
+                        isGreen && "text-slate-900",
+                        isBlack && "text-white",
+                        isWhite && "text-slate-900"
+                      )}>
+                        {card.holder}
+                      </p>
+                      <p className={cn(
+                        "text-2xl font-black tracking-tight mt-0.5",
+                        isGreen && "text-slate-900",
+                        isBlack && "text-white",
+                        isWhite && "text-slate-900"
+                      )}>
+                        RM {card.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </p>
+                    </div>
+                    <span className={cn(
+                      "text-sm font-black italic tracking-tight",
+                      isGreen && "text-slate-900",
+                      isBlack && "text-white",
+                      isWhite && "text-slate-900"
+                    )}>
+                      {card.brand}
+                    </span>
+                  </div>
+
+                  {/* Bottom row: Card number + badge */}
+                  <div className="flex justify-between items-end relative z-10 mt-auto pt-8">
+                    <p className={cn(
+                      "text-xs font-mono font-bold tracking-widest",
+                      isGreen && "text-slate-900/70",
+                      isBlack && "text-white/70",
+                      isWhite && "text-slate-500"
+                    )}>
+                      •••• {card.number}
+                    </p>
+                    {index === 0 && (
+                      <span className={cn(
+                        "text-[10px] font-black px-3 py-1.5 rounded-full flex items-center gap-1.5",
+                        isGreen && "bg-slate-900 text-white",
+                        isBlack && "bg-white/10 text-white",
+                        isWhite && "bg-slate-900 text-white"
+                      )}>
+                        <Check size={10} className="stroke-[3]" /> Main card
+                      </span>
+                    )}
+                    {index !== 0 && (
+                      <span className={cn(
+                        "text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full",
+                        isGreen && "bg-slate-900/10 text-slate-900/60",
+                        isBlack && "bg-white/10 text-white/50",
+                        isWhite && "bg-slate-100 text-slate-400"
+                      )}>
+                        {card.type}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+
+            {/* Add Card Button */}
             <motion.div 
               whileTap={{ scale: 0.97 }}
               onClick={() => setShowAddCardModal(true)}
-              className="w-[280px] shrink-0 rounded-[2.2rem] border-2 border-dashed border-slate-200 bg-slate-50/40 p-6 flex flex-col items-center justify-center text-center gap-2 cursor-pointer snap-start min-h-[165px] hover:bg-slate-50/80 hover:border-slate-300 transition-colors"
+              className="w-full rounded-[2rem] border-2 border-dashed border-slate-200 bg-slate-50/40 p-6 flex items-center justify-center gap-3 cursor-pointer min-h-[80px] hover:bg-slate-50/80 hover:border-slate-300 transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 shadow-sm border border-slate-200">
-                <Plus size={18} className="stroke-[3]" />
+              <div className="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center text-white shadow-sm">
+                <Plus size={16} className="stroke-[3]" />
               </div>
-              <div className="space-y-0.5">
-                <p className="text-sm font-extrabold text-slate-800">Add Family Card</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Kid, Spouse, or Parent</p>
-              </div>
+              <span className="text-sm font-extrabold text-slate-800">Add Card</span>
             </motion.div>
-
-            {/* List of active family cards (including child and wife) */}
-            {familyCards.map((card) => (
-              <motion.div 
-                key={card.id}
-                whileTap={{ scale: 0.98 }}
-                className={cn(
-                  "w-[280px] shrink-0 rounded-[2.2rem] p-6 text-white snap-start relative overflow-hidden shadow-lg flex flex-col justify-between min-h-[165px] bg-gradient-to-tr",
-                  card.gradient
-                )}
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none" />
-                
-                <div className="flex justify-between items-start">
-                  <div className="space-y-0.5">
-                    <span className="text-[8px] uppercase font-black bg-white/20 text-white px-2 py-0.5 rounded-full tracking-wider">
-                      {card.type}
-                    </span>
-                    <h4 className="font-extrabold text-white text-xs mt-1.5 leading-none">{card.title}</h4>
-                  </div>
-                  <span className="text-[10px] font-black tracking-widest bg-white/10 px-2 py-0.5 rounded-full uppercase">
-                    {card.brand}
-                  </span>
-                </div>
-
-                <div className="space-y-1.5 mt-4">
-                  <div className="flex justify-between items-baseline">
-                    <p className="text-[9px] text-white/70 font-bold uppercase tracking-wider">Active Wallet</p>
-                    <span className="text-[10px] font-bold text-white/90">{card.holder}</span>
-                  </div>
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-xl font-black leading-none">RM {card.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-                    <CreditCard size={15} className="text-white/60 opacity-80" />
-                  </div>
-                  <p className="text-[10px] font-mono tracking-widest text-white/90 mt-1">{card.number}</p>
-                </div>
-              </motion.div>
-            ))}
           </div>
         </section>
 
@@ -1066,30 +1327,101 @@ export const ParentDashboard: React.FC<{ activeTab: string }> = ({ activeTab }) 
             </span>
           </div>
 
+          {/* Per-member spending breakdown */}
           <div className="space-y-4">
-             <div className="flex items-end gap-3 h-28">
-               {[40, 65, 30, 80, 55, 90, 45].map((val, i) => (
-                 <div key={i} className="flex-1 space-y-2 group flex flex-col items-center justify-end h-full">
-                    <motion.div 
-                      initial={{ height: 0 }}
-                      animate={{ height: `${val}%` }}
-                      className={cn(
-                        "w-full rounded-t-lg transition-colors",
-                        i === 5 ? "bg-slate-900" : "bg-slate-150 group-hover:bg-slate-200"
-                      )}
-                    />
-                 </div>
-               ))}
-             </div>
-             <div className="pt-4 flex items-center justify-between border-t border-slate-100">
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Aggregate kids spend</p>
-                  <p className="text-2xl font-extrabold text-slate-900">RM 1,240.00</p>
+            {[
+              { name: 'Isac', avatar: '/images/isac.png', spend: 420, bars: [40, 65, 30, 80, 55, 90, 45], color: 'bg-slate-900' },
+              { name: 'Alisya', avatar: '/images/alisya.png', spend: 380, bars: [55, 40, 70, 35, 60, 45, 75], color: 'bg-slate-900' },
+              { name: 'Nadine', avatar: '/images/nadine.png', spend: 650, bars: [70, 85, 50, 90, 65, 40, 80], color: 'bg-slate-900' },
+              { name: 'Mom', avatar: '/images/grandma.png', spend: 280, bars: [30, 45, 25, 50, 35, 60, 40], color: 'bg-slate-900' },
+              { name: 'Dad', avatar: '/images/grandpa.png', spend: 190, bars: [20, 35, 40, 25, 45, 30, 50], color: 'bg-slate-900' },
+            ].map((member) => (
+              <div key={member.name} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <img src={member.avatar} alt={member.name} className="w-7 h-7 rounded-full object-cover border border-slate-200" />
+                    <span className="text-xs font-black text-slate-900">{member.name}</span>
+                  </div>
+                  <span className="text-xs font-extrabold text-slate-900">RM {member.spend.toLocaleString()}</span>
                 </div>
-                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-700">
-                  <ArrowUpRight size={18} />
+                <div className="flex items-end gap-1.5 h-12">
+                  {member.bars.map((val, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
+                      <motion.div 
+                        initial={{ height: 0 }}
+                        animate={{ height: `${val}%` }}
+                        className={cn("w-full rounded-t-md", member.color, "opacity-70")}
+                      />
+                    </div>
+                  ))}
                 </div>
-             </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-4 flex items-center justify-between border-t border-slate-100">
+            <div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Aggregate family spend</p>
+              <p className="text-2xl font-extrabold text-slate-900">RM 1,920.00</p>
+            </div>
+            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-700">
+              <ArrowUpRight size={18} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Web3 Reward Token Card */}
+        <Card className="border border-slate-100 bg-gradient-to-br from-[#1b1b1e] to-[#2d2d32] rounded-[2.5rem] p-6 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center shadow-md">
+                <Coins size={18} className="text-white" />
+              </div>
+              <div>
+                <h4 className="text-xs font-black text-white uppercase tracking-wider">Monetro Token (MNTR)</h4>
+                <p className="text-[9px] text-white/50 font-bold uppercase tracking-widest">ERC-20 · Sepolia Testnet</p>
+              </div>
+            </div>
+            <a 
+              href="https://sepolia.etherscan.io/address/0x1667fa2593beAFc6e63406c94F975DD859D35e4B" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[9px] font-black text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider hover:bg-purple-500/20 transition-colors"
+            >
+              View Contract ↗
+            </a>
+          </div>
+
+          {/* Family Members Token Balances */}
+          <div className="space-y-2.5">
+            {[
+              { name: 'Isac', avatar: '/images/isac.png', balance: 10000, earned: 50, role: 'Son' },
+              { name: 'Alisya', avatar: '/images/alisya.png', balance: 7500, earned: 35, role: 'Daughter' },
+              { name: 'Nadine', avatar: '/images/nadine.png', balance: 4200, earned: 20, role: 'Wife' },
+              { name: 'Mom', avatar: '/images/grandma.png', balance: 3000, earned: 15, role: 'Grandmother' },
+              { name: 'Dad', avatar: '/images/grandpa.png', balance: 3000, earned: 15, role: 'Grandfather' },
+            ].map((member) => (
+              <div key={member.name} className="bg-white/5 border border-white/10 rounded-2xl p-3.5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <img src={member.avatar} alt={member.name} className="w-9 h-9 rounded-full object-cover border border-white/20" />
+                  <div>
+                    <p className="text-xs font-black text-white">{member.name}</p>
+                    <p className="text-[8px] text-white/40 font-bold uppercase tracking-widest">{member.role}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-black text-white">{member.balance.toLocaleString()} <span className="text-[10px] text-purple-400">MNTR</span></p>
+                  <p className="text-[9px] font-bold text-[#74c300]">+{member.earned} this week</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 flex gap-2">
+            <span className="text-[8px] font-black text-white/40 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wider">💰 Savings: +10</span>
+            <span className="text-[8px] font-black text-white/40 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wider">🎯 Goals: +50</span>
+            <span className="text-[8px] font-black text-white/40 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wider">🔥 Streaks: +20</span>
           </div>
         </Card>
       </div>
