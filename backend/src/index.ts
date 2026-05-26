@@ -11,6 +11,7 @@ import notificationsRouter from "./routes/notifications";
 import aiRouter from "./routes/ai";
 import invitesRouter from "./routes/invites";
 import allowanceRouter from "./routes/allowance";
+import rewardsRouter from "./routes/rewards";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ async function startServer() {
   app.use("/api/ai", aiRouter);
   app.use("/api/invites", invitesRouter);
   app.use("/api/allowance", allowanceRouter);
+  app.use("/api/rewards", rewardsRouter);
 
   // --- Static serving for production ---
   if (process.env.NODE_ENV === "production") {
