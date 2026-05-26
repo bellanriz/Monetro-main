@@ -127,3 +127,20 @@ export const allowanceApi = {
       body: JSON.stringify({ kidId, amount, description }),
     }),
 };
+
+// --- Rewards / Web3 APIs ---
+export const rewardsApi = {
+  getBalance: (walletAddress: string) =>
+    request<{ walletAddress: string; balance: string; symbol: string }>(
+      `/rewards/balance/${walletAddress}`
+    ),
+  mint: (kidId: string, action: string, walletAddress: string) =>
+    request<{ message: string; txHash: string; etherscanUrl: string; amount: number }>(
+      "/rewards/mint",
+      { method: "POST", body: JSON.stringify({ kidId, action, walletAddress }) }
+    ),
+  getHistory: (kidId?: string) => {
+    const query = kidId ? `?kidId=${kidId}` : "";
+    return request<{ rewards: any[] }>(`/rewards/history${query}`);
+  },
+};

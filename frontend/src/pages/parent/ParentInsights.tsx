@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card } from '../../components/ui/card';
-import { TrendingUp, ArrowUpRight, Coins } from 'lucide-react';
+import { TrendingUp, ArrowUpRight, Coins, RefreshCw, AlertCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { useTokenBalances } from '@/hooks/useTokenBalances';
 
 export interface ParentInsightsProps {
   historyFilter: string;
@@ -11,6 +12,8 @@ export interface ParentInsightsProps {
 export const ParentInsights: React.FC<ParentInsightsProps> = ({
   historyFilter,
 }) => {
+  const { balances, totalBalance, isLoading, error, refetch } = useTokenBalances();
+
   return (
     <div className="max-w-md mx-auto p-6 space-y-8 pb-32 animate-in fade-in duration-500">
       <header className="flex items-center justify-between">
@@ -87,25 +90,37 @@ export const ParentInsights: React.FC<ParentInsightsProps> = ({
               <p className="text-[9px] text-white/50 font-bold uppercase tracking-widest">ERC-20 · Sepolia Testnet</p>
             </div>
           </div>
-          <a 
-            href="https://sepolia.etherscan.io/address/0x1667fa2593beAFc6e63406c94F975DD859D35e4B" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[9px] font-black text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider hover:bg-purple-500/20 transition-colors"
-          >
-            View Contract ↗
-          </a>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={refetch}
+              disabled={isLoading}
+              className="text-[9px] font-black text-white/60 hover:text-white transition-colors"
+              aria-label="Refresh balances"
+            >
+              <RefreshCw size={14} className={cn(isLoading && "animate-spin")} />
+            </button>
+            <a 
+              href="https://sepolia.etherscan.io/address/0x1667fa2593beAFc6e63406c94F975DD859D35e4B" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[9px] font-black text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider hover:bg-purple-500/20 transition-colors"
+            >
+              View Contract ↗
+            </a>
+          </div>
         </div>
+
+        {/* Error state */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-3 flex items-center gap-2">
+            <AlertCircle size={14} className="text-red-400 shrink-0" />
+            <p className="text-[10px] text-red-300 font-bold">{error}</p>
+          </div>
+        )}
 
         {/* Family Members Token Balances */}
         <div className="space-y-2.5">
-          {[
-            { name: 'Isac', avatar: '/images/isac.png', balance: 10000, earned: 50, role: 'Son' },
-            { name: 'Alisya', avatar: '/images/alisya.png', balance: 7500, earned: 35, role: 'Daughter' },
-            { name: 'Nadine', avatar: '/images/nadine.png', balance: 4200, earned: 20, role: 'Wife' },
-            { name: 'Mom', avatar: '/images/grandma.png', balance: 3000, earned: 15, role: 'Grandmother' },
-            { name: 'Dad', avatar: '/images/grandpa.png', balance: 3000, earned: 15, role: 'Grandfather' },
-          ].map((member) => (
+          {balances.map((member) => (
             <div key={member.name} className="bg-white/5 border border-white/10 rounded-2xl p-3.5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img src={member.avatar} alt={member.name} className="w-9 h-9 rounded-full object-cover border border-white/20" />
@@ -115,12 +130,27 @@ export const ParentInsights: React.FC<ParentInsightsProps> = ({
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-black text-white">{member.balance.toLocaleString()} <span className="text-[10px] text-purple-400">MNTR</span></p>
-                <p className="text-[9px] font-bold text-[#74c300]">+{member.earned} this week</p>
+                {member.loading ? (
+                  <div className="w-16 h-4 bg-white/10 rounded animate-pulse" />
+                ) : member.error ? (
+                  <p className="text-[9px] font-bold text-white/30">No wallet</p>
+                ) : (
+                  <p className="text-sm font-black text-white">
+                    {member.balance.toLocaleString()} <span className="text-[10px] text-purple-400">MNTR</span>
+                  </p>
+                )}
               </div>
             </div>
           ))}
         </div>
+
+        {/* Total balance */}
+        {!isLoading && !error && (
+          <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+            <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest">Total Family Tokens</p>
+            <p className="text-sm font-black text-white">{totalBalance.toLocaleString()} <span className="text-[10px] text-purple-400">MNTR</span></p>
+          </div>
+        )}
 
         <div className="mt-3 flex gap-2">
           <span className="text-[8px] font-black text-white/40 bg-white/5 px-2 py-1 rounded-md uppercase tracking-wider">💰 Savings: +10</span>
