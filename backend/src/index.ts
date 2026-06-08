@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import dotenv from "dotenv";
 
 // Route imports
@@ -38,14 +37,7 @@ async function startServer() {
   app.use("/api/allowance", allowanceRouter);
   app.use("/api/rewards", rewardsRouter);
 
-  // --- Static serving for production ---
-  if (process.env.NODE_ENV === "production") {
-    const distPath = path.join(process.cwd(), "../frontend/dist");
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  }
+  // Static serving removed — frontend deployed separately on Vercel
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Monetro backend running on http://localhost:${PORT}`);
