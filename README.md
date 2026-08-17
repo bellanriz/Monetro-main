@@ -1,6 +1,6 @@
 # Monetro - Smart Family FinTech
 
-A family finance management app with AI-powered insights and blockchain-based rewards, built with React + Express + Firebase + Solidity.
+A suitable family finance management app with AI-powered insights and blockchain-based rewards, built with React + Express + Firebase + Solidity.
 
 ## Project Structure
 
